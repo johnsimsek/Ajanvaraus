@@ -1,0 +1,1083 @@
+<!doctype html>
+<html lang="fi">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Ajanvaraus - Inky Vibes Tattoo</title>
+  
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css">
+  <script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
+  <script src="https://npmcdn.com/flatpickr/dist/l10n/fi.js"></script>
+  
+  <style>
+    * { box-sizing: border-box; }
+
+    body { 
+      font-family: ui-sans-serif, system-ui, sans-serif; 
+      background: #f6f7fb; 
+      color: #0b1220; 
+      margin: 0; 
+      padding: 40px 16px; 
+      position: relative; 
+      overflow-x: hidden; 
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      align-items: center; 
+      justify-content: center; 
+    }
+    
+    .bg-glow {
+      position: fixed;
+      top: 50%;
+      left: 50%;
+      width: 90vw;
+      height: 90vw;
+      max-width: 900px;
+      max-height: 900px;
+      transform: translate(-50%, -50%);
+      background: radial-gradient(circle at center, 
+        rgba(255, 223, 0, 0.85) 0%,   
+        rgba(255, 51, 153, 0.75) 40%, 
+        rgba(51, 204, 255, 0.4) 75%,  
+        transparent 100%);
+      filter: blur(80px);
+      z-index: 0;
+      border-radius: 50%;
+      animation: sunGlow 5s infinite alternate ease-in-out;
+      pointer-events: none;
+    }
+    @keyframes sunGlow {
+      0% { transform: translate(-50%, -50%) scale(0.9); opacity: 0.6; filter: blur(70px); }
+      100% { transform: translate(-50%, -50%) scale(1.4); opacity: 1; filter: blur(100px); }
+    }
+
+    .form-container { 
+      width: 100%; 
+      max-width: 450px; 
+      background: #fff; 
+      padding: 28px 24px; 
+      border-radius: 20px; 
+      box-shadow: 0 10px 30px rgba(16,24,40,.1); 
+      position: relative; 
+      z-index: 10; 
+    }
+
+    .top-right-controls {
+      position: absolute;
+      top: 16px;
+      right: 16px;
+      display: flex;
+      flex-direction: column;
+      align-items: flex-end; 
+      gap: 5px; 
+      z-index: 20;
+    }
+
+    .lang-switch {
+      display: flex;
+      gap: 4px;
+      background: #f3f4f6;
+      padding: 3px;
+      border-radius: 8px;
+    }
+    .lang-switch button {
+      background: transparent;
+      border: none;
+      padding: 5px 10px;
+      font-size: 11px; 
+      font-weight: 700;
+      color: #5a677a;
+      cursor: pointer;
+      border-radius: 6px;
+      transition: all 0.2s;
+    }
+    .lang-switch button.active {
+      background: #fff;
+      color: #0b1220;
+      box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+    }
+    
+    .status-badge {
+      display: inline-flex; 
+      align-items: center; 
+      gap: 4px; 
+      background: #ecfdf5; 
+      border: 1px solid #a7f3d0;
+      padding: 3px 6px; 
+      border-radius: 6px; 
+      font-size: 9px; 
+      font-weight: 800; 
+      color: #065f46;
+      box-shadow: 0 2px 10px rgba(16, 185, 129, 0.1);
+      white-space: nowrap; 
+      letter-spacing: -0.2px;
+    }
+    .status-dot {
+      width: 5px; 
+      height: 5px; 
+      background-color: #10b981;
+      border-radius: 50%; 
+      position: relative;
+    }
+    .status-dot::after {
+      content: ""; position: absolute;
+      top: -1.5px; left: -1.5px; right: -1.5px; bottom: -1.5px;
+      background-color: #10b981; border-radius: 50%;
+      animation: pulseGreen 2s infinite; z-index: 0;
+    }
+    @keyframes pulseGreen {
+      0% { transform: scale(0.8); opacity: 0.8; }
+      100% { transform: scale(2.2); opacity: 0; }
+    }
+
+    .logo-container { text-align: center; margin-bottom: 20px; margin-top: 10px; }
+    .logo-wrapper {
+      position: relative;
+      display: inline-block;
+      width: 125px; 
+      height: auto; 
+      overflow: hidden; 
+    }
+    .logo-wrapper img { width: 100%; height: auto; object-fit: cover; display: block; }
+    .logo-wrapper::after {
+      content: ""; position: absolute; top: 0; left: -100%; width: 50%; height: 100%;
+      background: linear-gradient(to right, rgba(255,255,255,0) 0%, rgba(255,255,255,0.6) 50%, rgba(255,255,255,0) 100%);
+      transform: skewX(-25deg); animation: logoShine 5s infinite; 
+    }
+    @keyframes logoShine { 0% { left: -100%; } 15% { left: 200%; } 100% { left: 200%; } }
+    
+    .intro-text { font-size: 13px; color: #5a677a; margin-bottom: 20px; text-align: center; line-height: 1.5; }
+    
+    /* AUTH & PROFILE BANNERS */
+    .auth-banner {
+      display: flex; flex-direction: column; gap: 10px; background: rgba(37,99,235,.05);
+      border: 1px solid rgba(37,99,235,.2); padding: 14px; border-radius: 12px; margin-bottom: 20px; text-align: center;
+    }
+    .auth-banner p { margin: 0; font-size: 12px; color: #1e3a8a; font-weight: 600; }
+    .auth-buttons { display: flex; gap: 8px; justify-content: center; }
+    .btn-small {
+      background: #000; color: #fff; border: none; padding: 8px 14px;
+      border-radius: 8px; font-size: 11px; font-weight: 700; cursor: pointer; transition: background 0.2s;
+    }
+    .btn-small:hover { background: #333; }
+    .btn-small.outline { background: #fff; color: #000; border: 1px solid #000; }
+    .btn-small.outline:hover { background: #f3f4f6; }
+
+    .field { display: flex; flex-direction: column; gap: 6px; margin-bottom: 16px; }
+    label { font-size: 12px; font-weight: 700; color: #0b1220; }
+    label.req::after { content: " *"; color: #dc2626; font-weight: bold; }
+    input, select, textarea { 
+      padding: 10px 12px; 
+      border: 1px solid rgba(16,24,40,.12); 
+      border-radius: 10px; 
+      font-size: 13.5px; 
+      outline: none; background: #fff; transition: border-color 0.2s; 
+    }
+    input:focus, select:focus, textarea:focus { border-color: #0b1220; }
+    
+    .info-box { display: none; background: #f3f4f6; border: 1px solid #e5e7eb; padding: 12px; border-radius: 10px; font-size: 12px; color: #374151; margin-bottom: 16px; line-height: 1.4; }
+    .info-box strong { font-weight: 900; display: block; margin-bottom: 3px; color: #111827;}
+
+    /* Ehdot -tyylit & Pin Tooltip */
+    .terms-link {
+      cursor: pointer;
+      font-size: 11.5px;
+      font-weight: 700;
+      color: #0b1220;
+      text-decoration: underline;
+    }
+    .terms-link:hover { color: #374151; }
+    
+    .terms-pad {
+      visibility: hidden;
+      opacity: 0;
+      position: absolute;
+      bottom: calc(100% + 4px); 
+      right: 0; 
+      width: calc(100vw - 48px);
+      max-width: 250px; 
+      background: #ffffff; 
+      border: 1px solid #e5e7eb;
+      border-radius: 10px; 
+      padding: 12px; 
+      font-size: 9.5px; 
+      color: #4b5563; 
+      line-height: 1.4;
+      box-shadow: 0 10px 20px rgba(0, 0, 0, 0.1), 0 4px 6px rgba(0,0,0,0.05);
+      z-index: 100;
+      transform: translateY(8px);
+      transition: opacity 0.2s ease, transform 0.2s ease, visibility 0.2s;
+      pointer-events: none; 
+    }
+    .terms-pad.show {
+      visibility: visible;
+      opacity: 1;
+      transform: translateY(0);
+      pointer-events: auto;
+    }
+
+    .terms-pad::after {
+      content: "";
+      position: absolute;
+      top: 100%;
+      right: 28px; 
+      border-width: 6px;
+      border-style: solid;
+      border-color: #ffffff transparent transparent transparent;
+    }
+    .terms-pad::before {
+      content: "";
+      position: absolute;
+      top: 100%;
+      right: 27px;
+      border-width: 7px;
+      border-style: solid;
+      border-color: #e5e7eb transparent transparent transparent;
+    }
+
+    .terms-pad strong { font-size: 11px; font-weight: 800; color: #111827; display: block; margin-bottom: 6px;} 
+    .terms-pad ul { margin: 0; padding-left: 14px; }
+    .terms-pad li { margin-bottom: 4px; } 
+    .terms-pad li:last-child { margin-bottom: 0; }
+    
+    /* CUSTOM TICK BOX STYLES WITH SWEEP EFFECT */
+    .checkbox-container {
+      display: flex; align-items: flex-start; gap: 10px; margin-top: 8px; position: relative;
+    }
+    .checkbox-container input[type="checkbox"] {
+      position: absolute; opacity: 0; left: 10px; top: 10px; pointer-events: none;
+    }
+    .custom-checkbox {
+      width: 22px; height: 22px;
+      border: 2px solid rgba(16,24,40,.25);
+      border-radius: 6px;
+      display: flex; align-items: center; justify-content: center;
+      cursor: pointer; flex-shrink: 0;
+      background: #fff;
+      transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+    }
+    .custom-checkbox svg { width: 13px; height: 11px; }
+    .custom-checkbox svg path {
+      stroke-dasharray: 18;
+      stroke-dashoffset: 18; 
+      transition: stroke-dashoffset 0.4s cubic-bezier(0.65, 0, 0.45, 1); 
+    }
+    .checkbox-container input[type="checkbox"]:checked + .custom-checkbox {
+      background: #0b1220;
+      border-color: #0b1220;
+      transform: scale(1.05); 
+      box-shadow: 0 3px 8px rgba(11, 18, 32, 0.25);
+    }
+    .checkbox-container input[type="checkbox"]:checked + .custom-checkbox svg path {
+      stroke-dashoffset: 0; 
+    }
+    .checkbox-container input[type="checkbox"]:focus-visible + .custom-checkbox {
+      box-shadow: 0 0 0 3px rgba(11, 18, 32, 0.15);
+    }
+    .checkbox-container .text-label {
+      font-size: 11.5px; 
+      cursor: pointer; line-height: 1.4; font-weight: 600; color: #0b1220;
+      margin-top: 3px;
+    }
+    
+    .btn { 
+      position: relative; overflow: hidden; background: linear-gradient(135deg, #2b2b2b 0%, #000000 100%); 
+      color: #fff; border: none; 
+      padding: 14px; 
+      border-radius: 10px; 
+      font-size: 14.5px; font-weight: 800; 
+      cursor: pointer; width: 100%; margin-top: 8px; transition: transform 0.1s, box-shadow 0.2s; 
+      box-shadow: 0 4px 10px rgba(0,0,0,0.2); 
+    }
+    .btn::after {
+      content: ""; position: absolute; top: 0; left: -100%; width: 50%; height: 100%;
+      background: linear-gradient(to right, rgba(255,255,255,0) 0%, rgba(255,255,255,0.25) 50%, rgba(255,255,255,0) 100%);
+      transform: skewX(-25deg); animation: shine 3s infinite;
+    }
+    @keyframes shine { 0% { left: -100%; } 20% { left: 200%; } 100% { left: 200%; } }
+    .btn:hover { background: linear-gradient(135deg, #404040 0%, #1a1a1a 100%); transform: translateY(-1px); box-shadow: 0 6px 14px rgba(0,0,0,0.3); }
+    .btn:disabled { opacity: 0.7; cursor: not-allowed; transform: none; }
+    
+    #successMessage { display: none; text-align: center; padding: 30px 20px; }
+    #successMessage p { color: #0b1220; line-height: 1.6; font-weight: 500; font-size: 14.5px; }
+    .checkmark { width: 50px; height: 50px; border-radius: 50%; display: block; stroke-width: 3.5; stroke: #16a34a; stroke-miterlimit: 10; margin: 0 auto 16px; box-shadow: inset 0px 0px 0px #16a34a; }
+    .checkmark__circle { stroke-dasharray: 166; stroke-dashoffset: 166; stroke-width: 3.5; stroke-miterlimit: 10; stroke: #16a34a; fill: none; animation: stroke 0.6s cubic-bezier(0.65, 0, 0.45, 1) forwards; }
+    .checkmark__check { transform-origin: 50% 50%; stroke-dasharray: 48; stroke-dashoffset: 48; animation: stroke 0.3s cubic-bezier(0.65, 0, 0.45, 1) 0.6s forwards; }
+    @keyframes stroke { 100% { stroke-dashoffset: 0; } }
+    
+    .help { font-size: 11px; color: #5a677a; margin-top: -3px; line-height: 1.3; }
+
+    #thoughtBubble {
+      position: absolute; background: #ffffff; border: 1px solid rgba(0, 0, 0, 0.05); border-radius: 14px;
+      padding: 12px 16px; font-size: 12px; font-weight: 500; color: #4b5563; z-index: 999999;
+      box-shadow: 0 12px 30px rgba(0,0,0,0.1), 0 4px 6px rgba(0,0,0,0.04); 
+      pointer-events: none; visibility: hidden; opacity: 0;
+      transition: opacity 0.3s ease, transform 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275); 
+      transform: translate(-50%, calc(-100% - 10px)) scale(0.9); transform-origin: bottom center;
+      width: max-content; max-width: 220px; text-align: center; line-height: 1.5;
+    }
+    #thoughtBubble.show { visibility: visible; opacity: 1; transform: translate(-50%, calc(-100% - 20px)) scale(1); }
+    #thoughtBubble .thought-tail-1 { position: absolute; bottom: -10px; left: 55%; width: 12px; height: 12px; background: #ffffff; border-radius: 50%; box-shadow: 0 4px 6px rgba(0,0,0,0.05); z-index: 1; }
+    #thoughtBubble .thought-tail-2 { position: absolute; bottom: -20px; left: calc(55% - 6px); width: 7px; height: 7px; background: #ffffff; border-radius: 50%; box-shadow: 0 4px 6px rgba(0,0,0,0.05); z-index: 1; }
+    #thoughtBubble.bubble-yellow { background: #fffbea; border: 1px solid #fde047; color: #ca8a04; font-weight: 800; }
+    #thoughtBubble.bubble-yellow .thought-tail-1,
+    #thoughtBubble.bubble-yellow .thought-tail-2 { background: #fffbea; }
+
+    .touch-ripple { position: absolute; border-radius: 50%; border: 1px solid rgba(11, 18, 32, 0.15); background: rgba(11, 18, 32, 0.05); transform: scale(0); animation: rippleDrop 0.5s cubic-bezier(0.25, 0.46, 0.45, 0.94) forwards; pointer-events: none; z-index: 9999999; }
+    @keyframes rippleDrop { 0% { transform: scale(0.3); opacity: 1; } 100% { transform: scale(2.5); opacity: 0; } }
+
+    .flatpickr-day.today { border: 2px solid #0b1220 !important; font-weight: 800; color: #0b1220 !important; background-color: #f3f4f6; }
+    .flatpickr-day.flatpickr-disabled, .flatpickr-day.flatpickr-disabled:hover { opacity: 0.25 !important; cursor: not-allowed; }
+    .flatpickr-day.today.flatpickr-disabled { opacity: 0.65 !important; }
+
+    .footer-text { text-align: center; font-size: 12px; color: #5a677a; margin-top: 24px; position: relative; z-index: 10; font-weight: 500; }
+
+    /* MODAL OVERLAYS (AUTH, BOOKINGS, PROFILE) */
+    .modal-overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100vh; background: rgba(0, 0, 0, 0.6); backdrop-filter: blur(4px); z-index: 4000; display: flex; align-items: center; justify-content: center; opacity: 0; visibility: hidden; transition: 0.3s; }
+    .modal-overlay.show { opacity: 1; visibility: visible; }
+    .modal-content { background: #fff; width: 90%; max-width: 400px; border-radius: 16px; padding: 24px; position: relative; box-shadow: 0 20px 40px rgba(0,0,0,0.2); max-height: 80vh; overflow-y: auto; }
+    .modal-close { position: absolute; top: 12px; right: 16px; font-size: 24px; cursor: pointer; color: #666; }
+    
+    .booking-card { border: 1px solid #e5e7eb; border-radius: 10px; padding: 12px; margin-bottom: 10px; background: #f9fafb; }
+    .booking-card strong { display: block; color: #111827; margin-bottom: 4px; }
+    .booking-card span { font-size: 12px; color: #4b5563; display: block; }
+    .booking-card .status { display: inline-block; padding: 4px 8px; border-radius: 6px; font-size: 10px; font-weight: bold; margin-top: 8px; }
+    .status-Pending { background: #fef3c7; color: #d97706; }
+    .status-Approved { background: #d1fae5; color: #059669; }
+    .status-Done { background: #e0e7ff; color: #4f46e5; }
+    .status-Cancelled { background: #fee2e2; color: #dc2626; }
+  </style>
+</head>
+<body>
+
+  <div class="bg-glow"></div>
+
+  <div id="thoughtBubble">
+    <span id="bubbleText"></span>
+    <div class="thought-tail-1"></div>
+    <div class="thought-tail-2"></div>
+  </div>
+
+  <div class="form-container" id="formWrapper">
+    <div class="top-right-controls">
+      <div class="lang-switch">
+        <button type="button" onclick="setLanguage('fi')" id="btn-fi" class="active">FI</button>
+        <button type="button" onclick="setLanguage('en')" id="btn-en">EN</button>
+      </div>
+      <div class="status-badge">
+        <span class="status-dot"></span>
+        <span id="t-statusText">Ajanvaraus avoinna</span>
+      </div>
+    </div>
+
+    <div class="logo-container">
+      <div class="logo-wrapper">
+        <img src="https://lh3.googleusercontent.com/d/1YKLeFhAOJRd8vY-ZqAhu7RYTYnXqIdK5" alt="Inky Vibes Tattoo Logo">
+      </div>
+    </div>
+    
+    <div class="intro-text" id="t-intro">
+      Ajan varaaminen on helppoa ja nopeaa - varaa aikasi verkossa sinulle sopivaan hetkeen. (Vain ajanvarauksella)
+    </div>
+
+    <!-- AUTH BANNERS -->
+    <div class="auth-banner" id="authBanner">
+      <p id="t-authDesc">Kirjaudu sisään nähdäksesi varauksesi ja täyttääksesi tiedot automaattisesti.</p>
+      <div class="auth-buttons">
+        <button type="button" class="btn-small" onclick="openAuthModal()" id="t-btnLogin">Kirjaudu sisään / Luo tili</button>
+      </div>
+    </div>
+
+    <div class="auth-banner" id="userBanner" style="display: none; background: #ecfdf5; border-color: #a7f3d0;">
+      <p style="color: #065f46;" id="t-welcomeMsg">Tervetuloa!</p>
+      <div class="auth-buttons">
+        <button type="button" class="btn-small" onclick="openProfileModal()">Profiili</button>
+      </div>
+    </div>
+
+    <!-- NOVALIDATE EKLENDİ - SESSİZ İPTALİ ÖNLER -->
+    <form id="publicBookingForm" novalidate>
+      
+      <!-- HIDING THIS IF LOGGED IN -->
+      <div id="guestFields">
+        <div class="field">
+          <label class="req" id="t-nameLabel">Koko Nimi</label>
+          <input type="text" id="custName" placeholder="Koko nimi (esim. Matti Meikäläinen)">
+        </div>
+        <div class="field">
+          <label class="req" id="t-emailLabel">Sähköpostiosoite</label>
+          <input type="email" id="custEmail" placeholder="esimerkki@sahkoposti.fi">
+        </div>
+        <div class="field">
+          <label class="req" id="t-phoneLabel">Puhelin Numero</label>
+          <input type="tel" id="custPhone" value="+358" pattern="^\+358[ \-0-9]{4,15}$">
+        </div>
+      </div>
+      
+      <div class="field">
+        <label class="req" id="t-typeLabel">Varaustyyppi</label>
+        <select id="bookingType">
+          <option value="" disabled selected id="t-typePlace">Valitse varaustyyppi...</option>
+          <option value="tattoo" id="opt-tattoo">Tatuointi Aika</option>
+          <option value="design" id="opt-design">Tatuointi Suunnittelu Aika</option>
+        </select>
+      </div>
+
+      <div id="infoTattoo" class="info-box">
+        <strong id="t-infoTattooTitle">Tatuointiaika (valmis idea)</strong>
+        <span id="t-infoTattooDesc">Sinulla on valmis idea tai referenssikuva. Laajaa suunnittelua ei tarvita; tarvittavat pienet muutokset tehdään ajanvarauksen yhteydessä ennen tatuointia.</span>
+      </div>
+      <div id="infoDesign" class="info-box">
+        <strong id="t-infoDesignTitle">Suunnitteluaika (suunnittelua vaativat tatuoinnit)</strong>
+        <span id="t-infoDesignDesc">Sopii kaikille tatuoinneille, jotka vaativat suunnittelua ennen tatuointia (koosta riippumatta). Suunnittelemme tatuoinnin yhdessä ennen varsinaista tatuointiaikaa.</span>
+      </div>
+
+      <div class="field">
+        <label class="req" id="t-dateLabel">Toivottu Varaus Päivä</label>
+        <input type="text" id="bookingDate" placeholder="Valitse päivä" readonly style="background-color: #fff; cursor: pointer;">
+      </div>
+      
+      <div class="field">
+        <label class="req" id="t-timeLabel">Toivottu Aika</label>
+        <select id="bookingTime">
+          <option value="10:00" selected>10:00</option>
+          <option value="11:00">11:00</option>
+          <option value="12:00">12:00</option>
+          <option value="13:00">13:00</option>
+          <option value="14:00">14:00</option>
+          <option value="15:00">15:00</option>
+          <option value="16:00">16:00</option>
+          <option value="17:00">17:00</option>
+          <option value="18:00">18:00</option>
+          <option value="19:00">19:00</option>
+        </select>
+      </div>
+
+      <div class="field">
+        <label id="t-notesLabel">Muistiinpanoja</label>
+        <textarea id="bookingNotes" rows="3" placeholder="Jos haluat, voit lisäta ideoita tai tarkempia tietoja varauksestasi."></textarea>
+      </div>
+
+      <div class="field">
+        <label id="t-fileLabel">Valitse tiedosto</label>
+        <div class="help" id="t-fileHelp">Jos sinulla on, lisääthän mahdolliset referenssi- tai inspiraatiokuvat. (Maks. 5MB)</div>
+        <input type="file" id="bookingFiles" accept="image/*" multiple>
+      </div>
+
+      <div class="field" style="margin-top: 10px; margin-bottom: 24px; border-top: 1px solid #e5e7eb; padding-top: 16px; position: relative;">
+        
+        <div class="checkbox-container">
+          <input type="checkbox" id="termsCheck">
+          
+          <label for="termsCheck" class="custom-checkbox">
+            <svg viewBox="0 0 12 10">
+              <path d="M1.5 5.5l3 3L10.5 1.5" fill="none" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+            </svg>
+          </label>
+          
+          <label for="termsCheck" class="text-label req">
+            <span id="t-termsCheckLabel">Olen lukenut ja hyväksyn</span>
+            <span class="terms-link" id="btn-termsLink" style="margin-left: 4px;"><span id="t-termsLink">varaus- ja peruutusehdot.</span></span>
+          </label>
+        </div>
+
+        <div id="termsPad" class="terms-pad">
+          <strong id="t-termsTitle">Hyväksyn seuraavat ehdot:</strong>
+          <ul id="t-termsList">
+            <li>Olen vähintään 18-vuotias.</li>
+            <li>Ajan voi perua tai siirtää maksutta viimeistään 48 tuntia ennen varattua aikaa. Alle 48 tuntia ennen tehtävistä peruutuksista tai saapumatta jättämisestä (no-show) varausmaksua ei palauteta. Toistuvien myöhäisten peruutusten tai no-show-tilanteiden vuoksi studio voi jatkossa vaatia ennakkomaksun tai olla hyväksymättä uusia ajanvarauksia.</li>
+            <li>Minulla ei ole allergioita, sairauksia tai lääkitystä, jotka saattavat vaikuttaa tatuoinnin lopputulokseen.</li>
+            <li>En käytä alkoholia 24 tuntiin ennen ajanvaraustani.</li>
+          </ul>
+        </div>
+      </div>
+
+      <button type="submit" class="btn" id="submitBtn">Lähetä</button>
+    </form>
+  </div>
+
+  <div class="form-container" id="successMessage">
+    <svg class="checkmark" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 52 52">
+      <circle class="checkmark__circle" cx="26" cy="26" r="25" fill="none"/>
+      <path class="checkmark__check" fill="none" d="M14.1 27.2l7.1 7.2 16.7-16.8"/>
+    </svg>
+    <p id="t-successMsg">Kiitos!<br>Ajanvarauspyyntösi on lähetetty<br>onnistuneesti.</p>
+  </div>
+
+  <div class="footer-text">
+    © Inky Vibes Tattoo
+  </div>
+
+  <!-- AUTH MODAL -->
+  <div class="modal-overlay" id="authModal">
+    <div class="modal-content">
+      <span class="modal-close" onclick="closeAuthModal()">&times;</span>
+      <h3 id="modalAuthTitle" style="text-align:center; margin-top:0;">Kirjaudu sisään</h3>
+      <p style="font-size:12px; color:#666; text-align:center;" id="modalAuthDesc">Tilaa sähköpostit ja varaa aika helposti.</p>
+      <form id="authForm" style="margin-top:20px;">
+        <div class="field signup-field" style="display:none;"><label>Koko Nimi</label><input type="text" id="authName" placeholder="Koko Nimi"></div>
+        <div class="field signup-field" style="display:none;"><label>Puhelinnumero</label><input type="tel" id="authPhone" value="+358"></div>
+        <div class="field"><label>Sähköpostiosoite</label><input type="email" id="authEmail" required></div>
+        <div class="field"><label>Salasana</label><input type="password" id="authPass" required></div>
+        <div style="text-align:right; margin-top:-10px; margin-bottom:15px; font-size:11px;">
+          <a href="#" onclick="resetPassword(event)" style="color:#666; text-decoration:none;">Unohditko salasanasi?</a>
+        </div>
+        <button type="submit" class="btn" id="authSubmitBtn">Kirjaudu</button>
+      </form>
+      <div style="text-align:center; margin-top:15px; font-size:12px;">
+        <a href="#" id="authToggleLink" style="color:#000; font-weight:bold;">Eikö sinulla ole tiliä? Rekisteröidy</a>
+      </div>
+    </div>
+  </div>
+
+  <!-- PROFILE MODAL -->
+  <div class="modal-overlay" id="profileModal">
+    <div class="modal-content" style="padding: 30px;">
+      <span class="modal-close" onclick="document.getElementById('profileModal').classList.remove('show')">&times;</span>
+      <h3 style="text-align:center; margin-top:0; margin-bottom: 20px;">Profiili</h3>
+      <div id="profile-info" style="font-size: 14px; line-height: 1.8; margin-bottom: 25px; color: #333;"></div>
+      <div style="display: flex; flex-direction: column; gap: 10px;">
+          <button class="btn" style="margin:0;" onclick="openBookingsFromProfile()">Omat Varaukset</button>
+          <button class="btn" style="margin:0; background: linear-gradient(135deg, #ef4444 0%, #b91c1c 100%);" onclick="logout()">Kirjaudu ulos</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- MY BOOKINGS MODAL -->
+  <div class="modal-overlay" id="bookingsModal">
+    <div class="modal-content">
+      <span class="modal-close" onclick="closeBookingsModal()">&times;</span>
+      <h3 style="margin-top:0;">Omat Varaukset</h3>
+      <div id="bookingsList" style="margin-top:15px;"></div>
+    </div>
+  </div>
+
+  <script>
+    // DUAL SCRIPT ROUTING
+    const APP_SCRIPT_URL = "https://script.google.com/macros/s/AKfycbyBTT3CKdLhRFBx8c_8OKGm84N6HIp1zDCQjNGLexEbOF5SskzQq9bfbUDcVTfetkMjTg/exec"; // Rezervasyonlar
+    const AUTH_SCRIPT_URL = "https://script.google.com/macros/s/AKfycbzcwVZTxNs4uSKA1RPU14FkDJRn11jqeIut3_q01O6rR1Cdh4cK64wGj6wvPpMke4qJrw/exec"; // Profiller
+
+    let currentUser = JSON.parse(localStorage.getItem('inky_user') || 'null');
+    let isLoginMode = true;
+
+    const translations = {
+      fi: {
+        statusText: "Ajanvaraus avoinna",
+        intro: "Ajan varaaminen on helppoa ja nopeaa - varaa aikasi verkossa sinulle sopivaan hetkeen.(Vain ajanvarauksella)",
+        nameLabel: "Nimi ja Sukunimi", namePlace: "Koko nimi (esim. Matti Meikäläinen)",
+        emailLabel: "Sähköpostiosoite", emailPlace: "esimerkki@sahkoposti.fi",
+        phoneLabel: "Puhelin Numero", phoneError: "Anna voimassa oleva puhelinnumero.",
+        typeLabel: "Varaustyyppi", typePlace: "Valitse varaustyyppi...",
+        typeTattoo: "Tatuointi Aika", typeDesign: "Tatuointi Suunnittelu Aika",
+        infoTattooTitle: "Tatuointiaika (valmis idea)", infoTattooDesc: "Sinulla on valmis idea tai referenssikuva. Laajaa suunnittelua ei tarvita; tarvittavat pienet muutokset tehdään ajanvarauksen yhteydessä ennen tatuointia.",
+        infoDesignTitle: "Suunnitteluaika (suunnittelua vaativat tatuoinnit)", infoDesignDesc: "Sopii kaikille tatuoinneille, jotka vaativat suunnittelua ennen tatuointia (koosta riippumatta). Suunnittelemme tatuoinnin yhdessä ennen varsinaista tatuointiaikaa.",
+        dateLabel: "Toivottu Varaus Päivä", datePlace: "Valitse päivä",
+        timeLabel: "Toivottu Aika",
+        notesLabel: "Muistiinpanoja", notesPlace: "Jos haluat, voit lisäta ideoita tai tarkempia tietoja varauksestasi.",
+        fileLabel: "Valitse tiedosto", fileHelp: "Jos sinulla on, lisääthän mahdolliset referenssi- tai inspiraatiokuvat. (Maks. 5MB)",
+        termsLink: "varaus- ja peruutusehdot.",
+        termsTitle: "Hyväksyn seuraavat ehdot:",
+        termsList: "<li>Olen vähintään 18-vuotias.</li><li>Ajan voi perua tai siirtää maksutta viimeistään 48 tuntia ennen varattua aikaa. Alle 48 tuntia ennen tehtävistä peruutuksista tai saapumatta jättämisestä (no-show) varausmaksua ei palauteta. Toistuvien myöhäisten peruutusten tai no-show-tilanteiden vuoksi studio voi jatkossa vaatia ennakkomaksun tai olla hyväksymättä uusia ajanvarauksia.</li><li>Minulla ei ole allergioita, sairauksia tai lääkitystä, jotka saattavat vaikuttaa tatuoinnin lopputulokseen.</li><li>En käytä alkoholia 24 tuntiin ennen ajanvaraustani.</li>",
+        termsCheckLabel: "Olen lukenut ja hyväksyn",
+        submitBtn: "Lähetä", submitLoading: "Lähetetään...",
+        successMsg: "Kiitos!<br>Ajanvarauspyyntösi on lähetetty<br>onnistuneesti.",
+        unavailable: "Valitsemasi päivä ei valitettavasti ole saatavilla. Valitse toinen päivä.",
+        limited: ["Muutama aika vapaana"],
+        errorMsg: "Virhe: ", connError: "Yhteysvirhe. Yritä uudelleen.",
+        alertName: "Anna koko nimesi.", alertEmail: "Anna sähköpostiosoite.",
+        alertPhone: "Anna puhelinnumero.", alertType: "Valitse varaustyyppi.",
+        alertDate: "Valitse päivämäärä.", alertTime: "Valitse aika.", alertTerms: "Hyväksy ehdot jatkaaksesi."
+      },
+      en: {
+        statusText: "Bookings open",
+        intro: "Booking an appointment is easy and fast - book your time online for a moment that suits you.",
+        nameLabel: "Full Name", namePlace: "Full name (e.g., John Doe)",
+        emailLabel: "Email Address", emailPlace: "example@email.com",
+        phoneLabel: "Phone Number", phoneError: "Please enter a valid phone number.",
+        typeLabel: "Booking Type", typePlace: "Select booking type...",
+        typeTattoo: "Tattoo Appointment", typeDesign: "Tattoo Design Appointment",
+        infoTattooTitle: "Tattoo Appointment (ready idea)", infoTattooDesc: "You have a ready idea or reference picture. Extensive design is not needed; necessary small changes will be made during the appointment before tattooing.",
+        infoDesignTitle: "Design Appointment (tattoos requiring design)", infoDesignDesc: "Suitable for all tattoos that require designing before tattooing (regardless of size). We will design the tattoo together before the actual tattoo appointment.",
+        dateLabel: "Preferred Booking Date", datePlace: "Select date",
+        timeLabel: "Preferred Time",
+        notesLabel: "Notes", notesPlace: "If you'd like, you can add ideas or more detailed information about your booking.",
+        fileLabel: "Select File", fileHelp: "If you have any, please add potential reference or inspiration pictures. (Max 5MB)",
+        termsLink: "booking and cancellation terms.",
+        termsTitle: "I accept the following terms:",
+        termsList: "<li>I am at least 18 years old.</li><li>Appointments can be cancelled or rescheduled free of charge up to 48 hours before the booked time. For cancellations made less than 48 hours before or no-shows, the booking fee is non-refundable. Due to repeated late cancellations or no-shows, the studio may require a prepayment in the future or decline new bookings.</li><li>I have no allergies, illnesses, or medications that might affect the tattoo result.</li><li>I will not consume alcohol for 24 hours before my appointment.</li>",
+        termsCheckLabel: "I have read and accept the",
+        submitBtn: "Submit", submitLoading: "Sending...",
+        successMsg: "Thank you!<br>Your booking request has been sent<br>successfully.",
+        unavailable: "Unfortunately, the selected date is not available. Please choose another date.",
+        limited: ["Few spots available"],
+        errorMsg: "Error: ", connError: "Connection error. Please try again.",
+        alertName: "Please enter your full name.", alertEmail: "Please enter your email.",
+        alertPhone: "Please enter your phone number.", alertType: "Please select a booking type.",
+        alertDate: "Please select a date.", alertTime: "Please select a time.", alertTerms: "Please accept the terms to continue."
+      }
+    };
+    
+    let currentLang = 'fi';
+    let calendarInstance = null;
+
+    function setLanguage(lang) {
+      currentLang = lang;
+      const t = translations[lang];
+      document.documentElement.lang = lang;
+      
+      document.getElementById('t-statusText').innerText = t.statusText;
+      document.getElementById('t-intro').innerText = t.intro;
+      document.getElementById('t-nameLabel').innerText = t.nameLabel;
+      document.getElementById('custName').placeholder = t.namePlace;
+      document.getElementById('t-emailLabel').innerText = t.emailLabel;
+      document.getElementById('custEmail').placeholder = t.emailPlace;
+      document.getElementById('t-phoneLabel').innerText = t.phoneLabel;
+      
+      const phoneInput = document.getElementById('custPhone');
+      if (!phoneInput.checkValidity() && phoneInput.value !== '+358') {
+         phoneInput.setCustomValidity(t.phoneError);
+      }
+
+      document.getElementById('t-typeLabel').innerText = t.typeLabel;
+      document.getElementById('t-typePlace').innerText = t.typePlace;
+      document.getElementById('opt-tattoo').innerText = t.typeTattoo;
+      document.getElementById('opt-design').innerText = t.typeDesign;
+      document.getElementById('t-infoTattooTitle').innerText = t.infoTattooTitle;
+      document.getElementById('t-infoTattooDesc').innerText = t.infoTattooDesc;
+      document.getElementById('t-infoDesignTitle').innerText = t.infoDesignTitle;
+      document.getElementById('t-infoDesignDesc').innerText = t.infoDesignDesc;
+      document.getElementById('t-dateLabel').innerText = t.dateLabel;
+      document.getElementById('bookingDate').placeholder = t.datePlace;
+      document.getElementById('t-timeLabel').innerText = t.timeLabel;
+      document.getElementById('t-notesLabel').innerText = t.notesLabel;
+      document.getElementById('bookingNotes').placeholder = t.notesPlace;
+      document.getElementById('t-fileLabel').innerText = t.fileLabel;
+      document.getElementById('t-fileHelp').innerText = t.fileHelp;
+      
+      document.getElementById('t-termsLink').innerText = t.termsLink;
+      document.getElementById('t-termsTitle').innerText = t.termsTitle;
+      document.getElementById('t-termsList').innerHTML = t.termsList;
+      document.getElementById('t-termsCheckLabel').innerText = t.termsCheckLabel;
+
+      document.getElementById('submitBtn').innerText = t.submitBtn;
+      document.getElementById('t-successMsg').innerHTML = t.successMsg;
+      
+      document.getElementById('btn-fi').classList.toggle('active', lang === 'fi');
+      document.getElementById('btn-en').classList.toggle('active', lang === 'en');
+      
+      initCalendar();
+    }
+
+    // PHONE LOCK FIXES
+    document.getElementById('custPhone').addEventListener('input', function(e) {
+      if (!this.value.startsWith("+358")) this.value = "+358";
+      e.target.setCustomValidity('');
+    });
+    document.getElementById('authPhone').addEventListener('input', function(e) {
+      if (!this.value.startsWith("+358")) this.value = "+358";
+    });
+
+    document.getElementById('custPhone').addEventListener('invalid', function(e) {
+      if (e.target.value.trim() === '+358' || !e.target.validity.valid) {
+        e.target.setCustomValidity(translations[currentLang].phoneError);
+      }
+    });
+
+    // AUTH UI LOGIC
+    function checkAuthUI() {
+      const guestFields = document.getElementById('guestFields');
+      const authBanner = document.getElementById('authBanner');
+      const userBanner = document.getElementById('userBanner');
+
+      if (currentUser) {
+        authBanner.style.display = 'none';
+        userBanner.style.display = 'flex';
+        guestFields.style.display = 'none'; 
+        document.getElementById('t-welcomeMsg').innerText = `Tervetuloa, ${currentUser.name}!`;
+      } else {
+        authBanner.style.display = 'flex';
+        userBanner.style.display = 'none';
+        guestFields.style.display = 'block'; 
+      }
+    }
+
+    function openAuthModal() { document.getElementById('authModal').classList.add('show'); }
+    function closeAuthModal() { document.getElementById('authModal').classList.remove('show'); }
+
+    function openProfileModal() {
+      if(currentUser) {
+          let p = String(currentUser.phone || "");
+          if (p && !p.startsWith("+")) p = "+" + p;
+          
+          document.getElementById("profile-info").innerHTML = `
+              <strong>Koko Nimi:</strong> ${currentUser.name}<br>
+              <strong>Sähköpostiosoite:</strong> ${currentUser.email}<br>
+              <strong>Puhelinnumero:</strong> ${p || "-"}
+          `;
+          document.getElementById('profileModal').classList.add('show');
+      }
+    }
+    
+    function openBookingsFromProfile() {
+        document.getElementById('profileModal').classList.remove('show');
+        fetchMyBookings();
+    }
+    
+    document.getElementById('authToggleLink').addEventListener('click', (e) => {
+      e.preventDefault();
+      isLoginMode = !isLoginMode;
+      document.querySelectorAll('.signup-field').forEach(el => el.style.display = isLoginMode ? 'none' : 'flex');
+      document.getElementById('modalAuthTitle').innerText = isLoginMode ? "Kirjaudu sisään" : "Luo tili";
+      document.getElementById('authSubmitBtn').innerText = isLoginMode ? "Kirjaudu" : "Rekisteröidy";
+      document.getElementById('authToggleLink').innerText = isLoginMode ? "Eikö sinulla ole tiliä? Rekisteröidy tästä" : "Onko sinulla jo tili? Kirjaudu sisään";
+    });
+
+    document.getElementById('authForm').addEventListener('submit', async (e) => {
+      e.preventDefault();
+      const btn = document.getElementById('authSubmitBtn');
+      const originalText = btn.innerText;
+      btn.disabled = true; btn.innerText = "Odottaa...";
+
+      const payload = { email: document.getElementById('authEmail').value, password: document.getElementById('authPass').value };
+      if (!isLoginMode) {
+        payload.name = document.getElementById('authName').value;
+        payload.phone = document.getElementById('authPhone').value;
+      }
+
+      try {
+        const res = await fetch(AUTH_SCRIPT_URL, { method: "POST", body: JSON.stringify({ action: isLoginMode ? "login" : "signup", payload: payload }) });
+        const data = await res.json();
+        
+        if(data.ok) {
+          localStorage.setItem('inky_user', JSON.stringify(data.user));
+          currentUser = data.user;
+          checkAuthUI();
+          closeAuthModal();
+        } else { alert("Virhe: " + data.error); }
+      } catch(err) { alert("Yhteysvirhe. Yritä uudelleen."); }
+      btn.disabled = false; btn.innerText = originalText;
+    });
+
+    function logout() { 
+        localStorage.removeItem('inky_user'); 
+        currentUser = null; 
+        document.getElementById('profileModal').classList.remove('show');
+        checkAuthUI(); 
+        alert("Olet kirjautunut ulos.");
+    }
+
+    function openBookingsModal() { document.getElementById('bookingsModal').classList.add('show'); }
+    function closeBookingsModal() { document.getElementById('bookingsModal').classList.remove('show'); }
+
+    async function fetchMyBookings() {
+      if (!currentUser) return;
+      openBookingsModal();
+      const list = document.getElementById('bookingsList');
+      list.innerHTML = "<p>Ladataan...</p>";
+      try {
+        const res = await fetch(AUTH_SCRIPT_URL, { method: "POST", body: JSON.stringify({ action: "getMyBookings", payload: { customerId: currentUser.id } }) });
+        const data = await res.json();
+        if (data.ok) {
+          if (data.bookings.length === 0) { list.innerHTML = "<p>Ei varauksia löytynyt.</p>"; } 
+          else {
+            list.innerHTML = data.bookings.map(b => {
+              const formatDate = (str) => {
+                if (!str) return '';
+                if (str.includes('T')) {
+                  let d = new Date(str);
+                  if (!isNaN(d)) return String(d.getDate()).padStart(2, '0') + '.' + String(d.getMonth() + 1).padStart(2, '0') + '.' + d.getFullYear();
+                }
+                return str;
+              };
+              const formatTime = (str) => {
+                if (!str) return '';
+                if (str.includes('T')) {
+                  let d = new Date(str);
+                  if (!isNaN(d)) return String(d.getHours()).padStart(2, '0') + ':' + String(d.getMinutes()).padStart(2, '0');
+                }
+                return str;
+              };
+              const typeText = (b.type === "Tattoo" || b.type === "tattoo") ? "Tatuointi Aika" : "Tatuointi Suunnittelu Aika";
+              
+              return `<div class="booking-card">
+                <strong>Varaustyyppi</strong>
+                <span style="margin-bottom: 8px;">${typeText}</span>
+                <strong>Päivämäärä</strong>
+                <span style="margin-bottom: 8px;">${formatDate(b.date)}</span>
+                <strong>Toivottu Aika</strong>
+                <span>${formatTime(b.time)}</span>
+                <span class="status status-Approved">Approved</span>
+              </div>`;
+            }).join('');
+          }
+        } else { list.innerHTML = "<p>Virhe ladattaessa varauksia.</p>"; }
+      } catch(err) { list.innerHTML = "<p>Yhteysvirhe.</p>"; }
+    }
+
+    async function resetPassword(e) {
+      e.preventDefault();
+      const emailInput = document.getElementById('authEmail').value.trim();
+      
+      if (!emailInput) {
+        alert("Kirjoita sähköpostiosoitteesi ylempään kenttään ensin ja paina 'Unohditko salasanasi?'.");
+        return;
+      }
+      
+      const btn = document.getElementById('authSubmitBtn');
+      const originalText = btn.innerText;
+      btn.innerText = "Lähetetään...";
+      btn.disabled = true;
+
+      try {
+        const res = await fetch(AUTH_SCRIPT_URL, {
+          method: "POST",
+          body: JSON.stringify({ action: "resetPassword", payload: { email: emailInput } })
+        });
+        const data = await res.json();
+        
+        if (data.ok) {
+          alert("Uusi salasana on generoitu! Tarkista sähköpostisi (myös roskapostikansio).");
+        } else {
+          alert("Virhe: " + data.error);
+        }
+      } catch (err) {
+        alert("Yhteysvirhe. Yritä uudelleen.");
+      }
+      
+      btn.innerText = originalText;
+      btn.disabled = false;
+    }
+
+    // TERMS TOOLTIP
+    const termsLinkBtn = document.getElementById('btn-termsLink');
+    const termsPad = document.getElementById('termsPad');
+
+    termsLinkBtn.addEventListener('click', function(e) {
+      e.preventDefault(); 
+      e.stopPropagation(); 
+      termsPad.classList.toggle('show');
+    });
+
+    document.addEventListener('click', function(e) {
+      if (termsPad.classList.contains('show')) {
+        if (!termsPad.contains(e.target)) {
+          termsPad.classList.remove('show');
+        }
+      }
+    });
+
+    function createRipple(event) {
+      const ripple = document.createElement("div");
+      ripple.classList.add("touch-ripple");
+      let clientX, clientY;
+      if (event.type === 'touchstart') {
+        clientX = event.touches[0].clientX; clientY = event.touches[0].clientY;
+      } else {
+        clientX = event.clientX; clientY = event.clientY;
+      }
+      const size = 40; 
+      ripple.style.width = `${size}px`; ripple.style.height = `${size}px`;
+      ripple.style.left = `${clientX + window.scrollX - (size / 2)}px`;
+      ripple.style.top = `${clientY + window.scrollY - (size / 2)}px`;
+      document.body.appendChild(ripple);
+      setTimeout(() => { ripple.remove(); }, 500);
+    }
+    document.addEventListener("mousedown", createRipple);
+    document.addEventListener("touchstart", createRipple, { passive: true });
+
+    let bubbleTimeout;
+    function showThoughtBubble(targetElement, text, isYellow = false) {
+      const bubble = document.getElementById('thoughtBubble');
+      const textElem = document.getElementById('bubbleText');
+      
+      textElem.innerHTML = text; 
+      
+      if (isYellow) {
+        bubble.classList.add('bubble-yellow');
+      } else {
+        bubble.classList.remove('bubble-yellow');
+      }
+      
+      const rect = targetElement.getBoundingClientRect();
+      const top = rect.top + window.scrollY;
+      const left = rect.left + window.scrollX + (rect.width / 2);
+
+      bubble.style.top = top + 'px';
+      bubble.style.left = left + 'px';
+      bubble.classList.add("show");
+      
+      clearTimeout(bubbleTimeout);
+      bubbleTimeout = setTimeout(function() {
+        bubble.classList.remove("show");
+      }, 2000); 
+    }
+
+    window.addEventListener('scroll', () => {
+      document.getElementById('thoughtBubble').classList.remove("show");
+    });
+
+    document.getElementById('bookingType').addEventListener('change', function() {
+      document.getElementById('infoTattoo').style.display = this.value === 'tattoo' ? 'block' : 'none';
+      document.getElementById('infoDesign').style.display = this.value === 'design' ? 'block' : 'none';
+    });
+
+    async function initCalendar() {
+      if (calendarInstance) { calendarInstance.destroy(); } 
+      
+      let disableRules = [];
+      let bookedDatesList = []; 
+
+      disableRules.push(function(date) { return (date.getDay() === 0); });
+
+      try {
+        const response = await fetch(APP_SCRIPT_URL + "?action=getUnavailableDates");
+        const data = await response.json();
+        if (data.ok) {
+          data.closedRanges.forEach(range => { disableRules.push({ from: range.from, to: range.to }); });
+          data.bookedDates.forEach(date => bookedDatesList.push(date));
+        }
+      } catch (error) { console.error("Virhe ladattaessa kalenteria:", error); }
+
+      let minBookingDate = new Date();
+      minBookingDate.setDate(minBookingDate.getDate() + 1);
+
+      calendarInstance = flatpickr("#bookingDate", {
+        locale: currentLang === 'fi' ? "fi" : "default", 
+        dateFormat: "Y-m-d", 
+        altInput: true,
+        altFormat: "d.m.Y",
+        minDate: minBookingDate, 
+        disable: disableRules,
+        
+        onDayCreate: function(dObj, dStr, fp, dayElem) {
+          let dateStr = fp.formatDate(dayElem.dateObj, "Y-m-d");
+          if (bookedDatesList.includes(dateStr)) {
+             dayElem.classList.add("booked-day");
+          }
+        },
+
+        onOpen: function() {
+          document.getElementById('thoughtBubble').classList.remove("show");
+        },
+
+        onChange: function(selectedDates, dateStr, instance) {
+          const dateObj = selectedDates[0];
+          if (dateObj && dateObj.getDate() % 3 === 0) { 
+             const msg = translations[currentLang].limited[0];
+             
+             setTimeout(() => {
+                const targetField = instance.altInput ? instance.altInput : document.getElementById('bookingDate');
+                showThoughtBubble(targetField, msg, true); 
+             }, 150);
+          }
+        },
+        
+        onReady: function(selectedDates, dateStr, instance) {
+          function interceptClick(e) {
+            const dayElem = e.target.closest ? e.target.closest('.flatpickr-day') : null;
+            
+            if (dayElem) {
+              if (dayElem.classList.contains('booked-day') || dayElem.classList.contains('flatpickr-disabled')) {
+                  e.stopPropagation();
+                  e.preventDefault();
+                  showThoughtBubble(dayElem, translations[currentLang].unavailable, false); 
+              }
+            }
+          }
+          instance.calendarContainer.addEventListener('mousedown', interceptClick, true);
+          instance.calendarContainer.addEventListener('touchstart', interceptClick, true);
+          instance.calendarContainer.addEventListener('click', interceptClick, true);
+        }
+      });
+    }
+
+    function fileToBase64(file) {
+      return new Promise((resolve, reject) => {
+        const reader = new FileReader();
+        reader.readAsDataURL(file);
+        reader.onload = () => resolve(reader.result);
+        reader.onerror = error => reject(error);
+      });
+    }
+
+    // FORM SUBMISSION (With JAVASCRIPT VALIDATION to fix silent HTML5 fail)
+    document.getElementById('publicBookingForm').addEventListener('submit', async function(e) {
+      e.preventDefault();
+
+      // Javascript Validation Check
+      if (!currentUser) {
+          if (!document.getElementById('custName').value.trim()) { alert(translations[currentLang].alertName); return; }
+          if (!document.getElementById('custEmail').value.trim()) { alert(translations[currentLang].alertEmail); return; }
+          const p = document.getElementById('custPhone').value.trim();
+          if (!p || p === "+358") { alert(translations[currentLang].alertPhone); return; }
+      }
+      if (!document.getElementById('bookingType').value) { alert(translations[currentLang].alertType); return; }
+      if (!document.getElementById('bookingDate').value) { alert(translations[currentLang].alertDate); return; }
+      if (!document.getElementById('bookingTime').value) { alert(translations[currentLang].alertTime); return; }
+      if (!document.getElementById('termsCheck').checked) { alert(translations[currentLang].alertTerms); return; }
+
+      const btn = document.getElementById('submitBtn');
+      btn.innerText = translations[currentLang].submitLoading;
+      btn.disabled = true;
+
+      const fileInput = document.getElementById('bookingFiles');
+      let imagesPayload = [];
+      if (fileInput.files.length > 0) {
+        for (let i = 0; i < fileInput.files.length; i++) {
+          const file = fileInput.files[i];
+          const b64 = await fileToBase64(file);
+          imagesPayload.push({ name: file.name, mime: file.type, dataBase64: b64.split(',')[1] });
+        }
+      }
+
+      const payload = {
+        customerId: currentUser ? currentUser.id : "GUEST",
+        custName: currentUser ? currentUser.name : document.getElementById('custName').value,
+        custEmail: currentUser ? currentUser.email : document.getElementById('custEmail').value,
+        custPhone: currentUser ? currentUser.phone : document.getElementById('custPhone').value,
+        bookingType: document.getElementById('bookingType').value,
+        bookingDate: document.getElementById('bookingDate').value,
+        bookingTime: document.getElementById('bookingTime').value,
+        bookingNotes: document.getElementById('bookingNotes').value,
+        images: imagesPayload
+      };
+
+      try {
+        // Send to old admin system
+        const res = await fetch(APP_SCRIPT_URL, {
+          method: "POST",
+          body: JSON.stringify({ action: "submitPublicBooking", payload: payload })
+        });
+        const data = await res.json();
+        
+        if(data.ok) {
+          // SEND BACKUP TO AUTH DB
+          if (currentUser) {
+            try {
+              await fetch(AUTH_SCRIPT_URL, {
+                method: "POST",
+                body: JSON.stringify({ action: "submitPublicBooking", payload: payload })
+              });
+            } catch(e) {} 
+          }
+
+          document.getElementById('formWrapper').style.display = 'none';
+          document.getElementById('successMessage').style.display = 'block';
+        } else {
+          alert(translations[currentLang].errorMsg + data.error);
+          btn.innerText = translations[currentLang].submitBtn;
+          btn.disabled = false;
+        }
+      } catch(err) {
+        alert(translations[currentLang].connError);
+        btn.innerText = translations[currentLang].submitBtn;
+        btn.disabled = false;
+      }
+    });
+
+    checkAuthUI();
+    initCalendar();
+  </script>
+</body>
+</html>
