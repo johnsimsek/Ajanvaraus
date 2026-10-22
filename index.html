@@ -554,10 +554,29 @@
   </div>
 
   <script>
+    // --- YENİ EKLENEN OTURUM YAKALAMA KODU ---
+    const params = new URLSearchParams(window.location.search);
+    const sessionData = params.get('session');
+
+    if (sessionData) {
+        try {
+            const decodedUser = JSON.parse(decodeURIComponent(sessionData));
+            // Gelen kullanici verisini bu domainin local storage'ina kaydet
+            localStorage.setItem("inky_user", JSON.stringify(decodedUser));
+            
+            // URL'i temizle, boylece sifrelenmis veri adres cubugunda cirkin gorunmez
+            window.history.replaceState({}, document.title, window.location.pathname);
+        } catch (e) {
+            console.warn("Kullanici verisi aktarilamadi:", e);
+        }
+    }
+    // --- BİTİŞ ---
+
     // DUAL SCRIPT ROUTING
     const APP_SCRIPT_URL = "https://script.google.com/macros/s/AKfycbyBTT3CKdLhRFBx8c_8OKGm84N6HIp1zDCQjNGLexEbOF5SskzQq9bfbUDcVTfetkMjTg/exec"; // Rezervasyonlar
     const AUTH_SCRIPT_URL = "https://script.google.com/macros/s/AKfycbzcwVZTxNs4uSKA1RPU14FkDJRn11jqeIut3_q01O6rR1Cdh4cK64wGj6wvPpMke4qJrw/exec"; // Profiller
 
+    // ARTİK YUKARIDAKİ KOD ÇALIŞTIKTAN SONRA BURA GÜNCEL VERİYİ ALACAK
     let currentUser = JSON.parse(localStorage.getItem('inky_user') || 'null');
     let isLoginMode = true;
 
@@ -746,8 +765,11 @@
       }
 
       try {
-        const res = await fetch(AUTH_SCRIPT_URL, { method: "POST", body: JSON.stringify({ action: isLoginMode ? "login" : "signup", payload: payload }) });
-        const data = await res.json();
+        const res = await fetch(AUTH_SCRIPT_URL, { method: "POST", body: JSON.stringify({ action: "login", payload: payload }) }); // Defaulting to login action fallback for shorthand
+        // NOTE: Updated action dynamically below
+        const dynamicAction = isLoginMode ? "login" : "signup";
+        const dynamicRes = await fetch(AUTH_SCRIPT_URL, { method: "POST", body: JSON.stringify({ action: dynamicAction, payload: payload }) });
+        const data = await dynamicRes.json();
         
         if(data.ok) {
           localStorage.setItem('inky_user', JSON.stringify(data.user));
