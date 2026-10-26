@@ -149,7 +149,6 @@
     
     .intro-text { font-size: 13px; color: #5a677a; margin-bottom: 20px; text-align: center; line-height: 1.5; }
     
-    /* AUTH BANNERS */
     .auth-banner {
       display: flex; flex-direction: column; gap: 10px; background: rgba(37,99,235,.05);
       border: 1px solid rgba(37,99,235,.2); padding: 14px; border-radius: 12px; margin-bottom: 20px; text-align: center;
@@ -161,7 +160,9 @@
       border-radius: 8px; font-size: 11px; font-weight: 700; cursor: pointer; transition: background 0.2s;
     }
     .btn-small:hover { background: #333; }
-    
+    .btn-small.outline { background: #fff; color: #000; border: 1px solid #000; }
+    .btn-small.outline:hover { background: #f3f4f6; }
+
     .field { display: flex; flex-direction: column; gap: 6px; margin-bottom: 16px; }
     label { font-size: 12px; font-weight: 700; color: #0b1220; }
     label.req::after { content: " *"; color: #dc2626; font-weight: bold; }
@@ -177,37 +178,120 @@
     .info-box { display: none; background: #f3f4f6; border: 1px solid #e5e7eb; padding: 12px; border-radius: 10px; font-size: 12px; color: #374151; margin-bottom: 16px; line-height: 1.4; }
     .info-box strong { font-weight: 900; display: block; margin-bottom: 3px; color: #111827;}
 
-    .terms-link { cursor: pointer; font-size: 11.5px; font-weight: 700; color: #0b1220; text-decoration: underline; }
+    .terms-link {
+      cursor: pointer;
+      font-size: 11.5px;
+      font-weight: 700;
+      color: #0b1220;
+      text-decoration: underline;
+    }
     .terms-link:hover { color: #374151; }
     
     .terms-pad {
-      visibility: hidden; opacity: 0; position: absolute;
-      bottom: calc(100% + 4px); right: 0; width: calc(100vw - 48px);
-      max-width: 250px; background: #ffffff; border: 1px solid #e5e7eb;
-      border-radius: 10px; padding: 12px; font-size: 9.5px; color: #4b5563; 
-      line-height: 1.4; box-shadow: 0 10px 20px rgba(0, 0, 0, 0.1), 0 4px 6px rgba(0,0,0,0.05);
-      z-index: 100; transform: translateY(8px);
-      transition: opacity 0.2s ease, transform 0.2s ease, visibility 0.2s; pointer-events: none; 
+      visibility: hidden;
+      opacity: 0;
+      position: absolute;
+      bottom: calc(100% + 4px); 
+      right: 0; 
+      width: calc(100vw - 48px);
+      max-width: 250px; 
+      background: #ffffff; 
+      border: 1px solid #e5e7eb;
+      border-radius: 10px; 
+      padding: 12px; 
+      font-size: 9.5px; 
+      color: #4b5563; 
+      line-height: 1.4;
+      box-shadow: 0 10px 20px rgba(0, 0, 0, 0.1), 0 4px 6px rgba(0,0,0,0.05);
+      z-index: 100;
+      transform: translateY(8px);
+      transition: opacity 0.2s ease, transform 0.2s ease, visibility 0.2s;
+      pointer-events: none; 
     }
-    .terms-pad.show { visibility: visible; opacity: 1; transform: translateY(0); pointer-events: auto; }
-    .terms-pad::after { content: ""; position: absolute; top: 100%; right: 28px; border-width: 6px; border-style: solid; border-color: #ffffff transparent transparent transparent; }
-    .terms-pad::before { content: ""; position: absolute; top: 100%; right: 27px; border-width: 7px; border-style: solid; border-color: #e5e7eb transparent transparent transparent; }
+    .terms-pad.show {
+      visibility: visible;
+      opacity: 1;
+      transform: translateY(0);
+      pointer-events: auto;
+    }
+
+    .terms-pad::after {
+      content: "";
+      position: absolute;
+      top: 100%;
+      right: 28px; 
+      border-width: 6px;
+      border-style: solid;
+      border-color: #ffffff transparent transparent transparent;
+    }
+    .terms-pad::before {
+      content: "";
+      position: absolute;
+      top: 100%;
+      right: 27px;
+      border-width: 7px;
+      border-style: solid;
+      border-color: #e5e7eb transparent transparent transparent;
+    }
+
     .terms-pad strong { font-size: 11px; font-weight: 800; color: #111827; display: block; margin-bottom: 6px;} 
     .terms-pad ul { margin: 0; padding-left: 14px; }
     .terms-pad li { margin-bottom: 4px; } 
     .terms-pad li:last-child { margin-bottom: 0; }
     
-    .checkbox-container { display: flex; align-items: flex-start; gap: 10px; margin-top: 8px; position: relative; }
-    .checkbox-container input[type="checkbox"] { position: absolute; opacity: 0; left: 10px; top: 10px; pointer-events: none; }
-    .custom-checkbox { width: 22px; height: 22px; border: 2px solid rgba(16,24,40,.25); border-radius: 6px; display: flex; align-items: center; justify-content: center; cursor: pointer; flex-shrink: 0; background: #fff; transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1); }
+    .checkbox-container {
+      display: flex; align-items: flex-start; gap: 10px; margin-top: 8px; position: relative;
+    }
+    .checkbox-container input[type="checkbox"] {
+      position: absolute; opacity: 0; left: 10px; top: 10px; pointer-events: none;
+    }
+    .custom-checkbox {
+      width: 22px; height: 22px;
+      border: 2px solid rgba(16,24,40,.25);
+      border-radius: 6px;
+      display: flex; align-items: center; justify-content: center;
+      cursor: pointer; flex-shrink: 0;
+      background: #fff;
+      transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+    }
     .custom-checkbox svg { width: 13px; height: 11px; }
-    .custom-checkbox svg path { stroke-dasharray: 18; stroke-dashoffset: 18; transition: stroke-dashoffset 0.4s cubic-bezier(0.65, 0, 0.45, 1); }
-    .checkbox-container input[type="checkbox"]:checked + .custom-checkbox { background: #0b1220; border-color: #0b1220; transform: scale(1.05); box-shadow: 0 3px 8px rgba(11, 18, 32, 0.25); }
-    .checkbox-container input[type="checkbox"]:checked + .custom-checkbox svg path { stroke-dashoffset: 0; }
-    .checkbox-container .text-label { font-size: 11.5px; cursor: pointer; line-height: 1.4; font-weight: 600; color: #0b1220; margin-top: 3px; }
+    .custom-checkbox svg path {
+      stroke-dasharray: 18;
+      stroke-dashoffset: 18; 
+      transition: stroke-dashoffset 0.4s cubic-bezier(0.65, 0, 0.45, 1); 
+    }
+    .checkbox-container input[type="checkbox"]:checked + .custom-checkbox {
+      background: #0b1220;
+      border-color: #0b1220;
+      transform: scale(1.05); 
+      box-shadow: 0 3px 8px rgba(11, 18, 32, 0.25);
+    }
+    .checkbox-container input[type="checkbox"]:checked + .custom-checkbox svg path {
+      stroke-dashoffset: 0; 
+    }
+    .checkbox-container input[type="checkbox"]:focus-visible + .custom-checkbox {
+      box-shadow: 0 0 0 3px rgba(11, 18, 32, 0.15);
+    }
+    .checkbox-container .text-label {
+      font-size: 11.5px; 
+      cursor: pointer; line-height: 1.4; font-weight: 600; color: #0b1220;
+      margin-top: 3px;
+    }
     
-    .btn { position: relative; overflow: hidden; background: linear-gradient(135deg, #2b2b2b 0%, #000000 100%); color: #fff; border: none; padding: 14px; border-radius: 10px; font-size: 14.5px; font-weight: 800; cursor: pointer; width: 100%; margin-top: 8px; transition: transform 0.1s, box-shadow 0.2s; box-shadow: 0 4px 10px rgba(0,0,0,0.2); }
-    .btn::after { content: ""; position: absolute; top: 0; left: -100%; width: 50%; height: 100%; background: linear-gradient(to right, rgba(255,255,255,0) 0%, rgba(255,255,255,0.25) 50%, rgba(255,255,255,0) 100%); transform: skewX(-25deg); animation: shine 3s infinite; }
+    .btn { 
+      position: relative; overflow: hidden; background: linear-gradient(135deg, #2b2b2b 0%, #000000 100%); 
+      color: #fff; border: none; 
+      padding: 14px; 
+      border-radius: 10px; 
+      font-size: 14.5px; font-weight: 800; 
+      cursor: pointer; width: 100%; margin-top: 8px; transition: transform 0.1s, box-shadow 0.2s; 
+      box-shadow: 0 4px 10px rgba(0,0,0,0.2); 
+    }
+    .btn::after {
+      content: ""; position: absolute; top: 0; left: -100%; width: 50%; height: 100%;
+      background: linear-gradient(to right, rgba(255,255,255,0) 0%, rgba(255,255,255,0.25) 50%, rgba(255,255,255,0) 100%);
+      transform: skewX(-25deg); animation: shine 3s infinite;
+    }
     @keyframes shine { 0% { left: -100%; } 20% { left: 200%; } 100% { left: 200%; } }
     .btn:hover { background: linear-gradient(135deg, #404040 0%, #1a1a1a 100%); transform: translateY(-1px); box-shadow: 0 6px 14px rgba(0,0,0,0.3); }
     .btn:disabled { opacity: 0.7; cursor: not-allowed; transform: none; }
@@ -222,13 +306,20 @@
     .help { font-size: 11px; color: #5a677a; margin-top: -3px; line-height: 1.3; }
 
     #thoughtBubble {
-      position: absolute; background: #ffffff; border: 1px solid rgba(0, 0, 0, 0.05); border-radius: 14px; padding: 12px 16px; font-size: 12px; font-weight: 500; color: #4b5563; z-index: 999999; box-shadow: 0 12px 30px rgba(0,0,0,0.1), 0 4px 6px rgba(0,0,0,0.04); pointer-events: none; visibility: hidden; opacity: 0; transition: opacity 0.3s ease, transform 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275); transform: translate(-50%, calc(-100% - 10px)) scale(0.9); transform-origin: bottom center; width: max-content; max-width: 220px; text-align: center; line-height: 1.5;
+      position: absolute; background: #ffffff; border: 1px solid rgba(0, 0, 0, 0.05); border-radius: 14px;
+      padding: 12px 16px; font-size: 12px; font-weight: 500; color: #4b5563; z-index: 999999;
+      box-shadow: 0 12px 30px rgba(0,0,0,0.1), 0 4px 6px rgba(0,0,0,0.04); 
+      pointer-events: none; visibility: hidden; opacity: 0;
+      transition: opacity 0.3s ease, transform 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275); 
+      transform: translate(-50%, calc(-100% - 10px)) scale(0.9); transform-origin: bottom center;
+      width: max-content; max-width: 220px; text-align: center; line-height: 1.5;
     }
     #thoughtBubble.show { visibility: visible; opacity: 1; transform: translate(-50%, calc(-100% - 20px)) scale(1); }
     #thoughtBubble .thought-tail-1 { position: absolute; bottom: -10px; left: 55%; width: 12px; height: 12px; background: #ffffff; border-radius: 50%; box-shadow: 0 4px 6px rgba(0,0,0,0.05); z-index: 1; }
     #thoughtBubble .thought-tail-2 { position: absolute; bottom: -20px; left: calc(55% - 6px); width: 7px; height: 7px; background: #ffffff; border-radius: 50%; box-shadow: 0 4px 6px rgba(0,0,0,0.05); z-index: 1; }
     #thoughtBubble.bubble-yellow { background: #fffbea; border: 1px solid #fde047; color: #ca8a04; font-weight: 800; }
-    #thoughtBubble.bubble-yellow .thought-tail-1, #thoughtBubble.bubble-yellow .thought-tail-2 { background: #fffbea; }
+    #thoughtBubble.bubble-yellow .thought-tail-1,
+    #thoughtBubble.bubble-yellow .thought-tail-2 { background: #fffbea; }
 
     .touch-ripple { position: absolute; border-radius: 50%; border: 1px solid rgba(11, 18, 32, 0.15); background: rgba(11, 18, 32, 0.05); transform: scale(0); animation: rippleDrop 0.5s cubic-bezier(0.25, 0.46, 0.45, 0.94) forwards; pointer-events: none; z-index: 9999999; }
     @keyframes rippleDrop { 0% { transform: scale(0.3); opacity: 1; } 100% { transform: scale(2.5); opacity: 0; } }
@@ -284,7 +375,7 @@
     </div>
     
     <div class="intro-text" id="t-intro">
-      Ajan varaaminen on helppoa ja nopeaa - varaa aikasi verkossa sinulle sopivaan hetkeen. (Vain ajanvarauksella)
+      Ajan varaaminen on helppoa ja nopeaa - varaa aikasi verkossa sinulle sopivaan hetkeen.(Vain ajanvarauksella)
     </div>
 
     <!-- AUTH BANNERS -->
@@ -303,6 +394,8 @@
     </div>
 
     <form id="publicBookingForm" novalidate>
+      
+      <!-- HIDING THIS IF LOGGED IN -->
       <div id="guestFields">
         <div class="field">
           <label class="req" id="t-nameLabel">Koko Nimi</label>
@@ -369,13 +462,16 @@
       </div>
 
       <div class="field" style="margin-top: 10px; margin-bottom: 24px; border-top: 1px solid #e5e7eb; padding-top: 16px; position: relative;">
+        
         <div class="checkbox-container">
           <input type="checkbox" id="termsCheck">
+          
           <label for="termsCheck" class="custom-checkbox">
             <svg viewBox="0 0 12 10">
               <path d="M1.5 5.5l3 3L10.5 1.5" fill="none" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
             </svg>
           </label>
+          
           <label for="termsCheck" class="text-label req">
             <span id="t-termsCheckLabel">Olen lukenut ja hyväksyn</span>
             <span class="terms-link" id="btn-termsLink" style="margin-left: 4px;"><span id="t-termsLink">varaus- ja peruutusehdot.</span></span>
@@ -454,9 +550,9 @@
   </div>
 
   <script>
-    // --- OTURUM YAKALAMA ---
     const params = new URLSearchParams(window.location.search);
     const sessionData = params.get('session');
+
     if (sessionData) {
         try {
             const decodedUser = JSON.parse(decodeURIComponent(sessionData));
@@ -467,7 +563,10 @@
         }
     }
 
-    const APP_SCRIPT_URL = "https://script.google.com/macros/s/AKfycbyBTT3CKdLhRFBx8c_8OKGm84N6HIp1zDCQjNGLexEbOF5SskzQq9bfbUDcVTfetkMjTg/exec"; 
+    // 🔥 İŞTE TÜM SORUNUN KAYNAĞI BURASIYDI! 🔥
+    // Eski kodunda bu link "...BTT..." idi, yani Admin panelinden (c45Y) BAĞIMSIZ çalışıyordu.
+    // Bunu, admin panelinin kullandığı "c45Y..." linkiyle eşitledim.
+    const APP_SCRIPT_URL = "https://script.google.com/macros/s/AKfycbyc45YkgjuRcdx5X6hokMpA3L-wCtoGV0EwH6SjSRqFY9vUVUJ8yUdcoyzERdkRjY-oEA/exec"; 
     const AUTH_SCRIPT_URL = "https://script.google.com/macros/s/AKfycbzcwVZTxNs4uSKA1RPU14FkDJRn11jqeIut3_q01O6rR1Cdh4cK64wGj6wvPpMke4qJrw/exec"; 
 
     let currentUser = JSON.parse(localStorage.getItem('inky_user') || 'null');
@@ -476,8 +575,8 @@
     const translations = {
       fi: {
         statusText: "Ajanvaraus avoinna",
-        intro: "Ajan varaaminen on helppoa ja nopeaa - varaa aikasi verkossa sinulle sopivaan hetkeen. (Vain ajanvarauksella)",
-        nameLabel: "Koko Nimi", namePlace: "Koko nimi (esim. Matti Meikäläinen)",
+        intro: "Ajan varaaminen on helppoa ja nopeaa - varaa aikasi verkossa sinulle sopivaan hetkeen.(Vain ajanvarauksella)",
+        nameLabel: "Nimi ja Sukunimi", namePlace: "Koko nimi (esim. Matti Meikäläinen)",
         emailLabel: "Sähköpostiosoite", emailPlace: "esimerkki@sahkoposti.fi",
         phoneLabel: "Puhelin Numero", phoneError: "Anna voimassa oleva puhelinnumero.",
         typeLabel: "Varaustyyppi", typePlace: "Valitse varaustyyppi...",
@@ -588,6 +687,7 @@
     document.getElementById('authPhone').addEventListener('input', function(e) {
       if (!this.value.startsWith("+358")) this.value = "+358";
     });
+
     document.getElementById('custPhone').addEventListener('invalid', function(e) {
       if (e.target.value.trim() === '+358' || !e.target.validity.valid) {
         e.target.setCustomValidity(translations[currentLang].phoneError);
@@ -613,6 +713,7 @@
 
     function openAuthModal() { document.getElementById('authModal').classList.add('show'); }
     function closeAuthModal() { document.getElementById('authModal').classList.remove('show'); }
+
     function openProfileModal() {
       if(currentUser) {
           let p = String(currentUser.phone || "");
@@ -727,10 +828,12 @@
     async function resetPassword(e) {
       e.preventDefault();
       const emailInput = document.getElementById('authEmail').value.trim();
+      
       if (!emailInput) {
         alert("Kirjoita sähköpostiosoitteesi ylempään kenttään ensin ja paina 'Unohditko salasanasi?'.");
         return;
       }
+      
       const btn = document.getElementById('authSubmitBtn');
       const originalText = btn.innerText;
       btn.innerText = "Lähetetään...";
@@ -742,12 +845,15 @@
           body: JSON.stringify({ action: "resetPassword", payload: { email: emailInput } })
         });
         const data = await res.json();
+        
         if (data.ok) {
           alert("Uusi salasana on generoitu! Tarkista sähköpostisi (myös roskapostikansio).");
         } else {
           alert("Virhe: " + data.error);
         }
-      } catch (err) { alert("Yhteysvirhe. Yritä uudelleen."); }
+      } catch (err) {
+        alert("Yhteysvirhe. Yritä uudelleen.");
+      }
       
       btn.innerText = originalText;
       btn.disabled = false;
@@ -755,11 +861,13 @@
 
     const termsLinkBtn = document.getElementById('btn-termsLink');
     const termsPad = document.getElementById('termsPad');
+
     termsLinkBtn.addEventListener('click', function(e) {
       e.preventDefault(); 
       e.stopPropagation(); 
       termsPad.classList.toggle('show');
     });
+
     document.addEventListener('click', function(e) {
       if (termsPad.classList.contains('show')) {
         if (!termsPad.contains(e.target)) {
@@ -791,8 +899,14 @@
     function showThoughtBubble(targetElement, text, isYellow = false) {
       const bubble = document.getElementById('thoughtBubble');
       const textElem = document.getElementById('bubbleText');
+      
       textElem.innerHTML = text; 
-      if (isYellow) { bubble.classList.add('bubble-yellow'); } else { bubble.classList.remove('bubble-yellow'); }
+      
+      if (isYellow) {
+        bubble.classList.add('bubble-yellow');
+      } else {
+        bubble.classList.remove('bubble-yellow');
+      }
       
       const rect = targetElement.getBoundingClientRect();
       const top = rect.top + window.scrollY;
@@ -807,42 +921,92 @@
         bubble.classList.remove("show");
       }, 2000); 
     }
-    window.addEventListener('scroll', () => { document.getElementById('thoughtBubble').classList.remove("show"); });
+
+    window.addEventListener('scroll', () => {
+      document.getElementById('thoughtBubble')?.classList.remove("show");
+    });
 
     document.getElementById('bookingType').addEventListener('change', function() {
       document.getElementById('infoTattoo').style.display = this.value === 'tattoo' ? 'block' : 'none';
       document.getElementById('infoDesign').style.display = this.value === 'design' ? 'block' : 'none';
     });
 
-    // BİREBİR ESKİ, ÇALIŞAN (HİÇBİR ZAMAN KAYMASI YAPMAYAN) TAKVİM MANTIĞI + DOĞRUDAN DİSABLE
+
+    // 🔥 YENİ SENKRONİZE TAKVİM KODU 🔥
+    // Admin panelinin kullandığı "getClosedDates" ve "export" fonksiyonlarını kullanarak 
+    // Admin panelinin veritabanındaki her şeyi birebir okur.
     async function initCalendar() {
       if (calendarInstance) { calendarInstance.destroy(); } 
       
-      let disableRules = [];
       let bookedDatesList = []; 
+      let closedRangesList = [];
 
-      disableRules.push(function(date) { return (date.getDay() === 0); });
+      // Güvenli tarih ayrıştırıcı
+      function safeYMD(val) {
+        if (!val) return null;
+        let s = String(val).trim();
+        const match = s.match(/^(\d{4}-\d{2}-\d{2})/);
+        if (match) return match[1];
+        const d = new Date(s);
+        if (!isNaN(d.getTime())) {
+            const y = d.getFullYear();
+            const m = String(d.getMonth() + 1).padStart(2, '0');
+            const day = String(d.getDate()).padStart(2, '0');
+            return `${y}-${m}-${day}`;
+        }
+        return s.substring(0, 10);
+      }
 
+      // 1. Admin panelindeki "Kapalı Günleri" çek
       try {
-        const response = await fetch(APP_SCRIPT_URL + "?action=getUnavailableDates");
-        const data = await response.json();
+        const adminRes = await fetch(APP_SCRIPT_URL + "?action=getClosedDates");
+        const adminData = await adminRes.json();
+        if (adminData.ok && adminData.closedDates) {
+           adminData.closedDates.forEach(c => {
+              const s = safeYMD(c.startDate);
+              const e = safeYMD(c.endDate || c.startDate);
+              if (s && e) {
+                  closedRangesList.push({ start: s, end: e });
+              }
+           });
+        }
+      } catch (err) { console.warn(err); }
+
+      // 2. Admin panelindeki "Rezervasyonları" çek
+      try {
+        const exportRes = await fetch(APP_SCRIPT_URL + "?action=export");
+        const exportData = await exportRes.json();
+        if (exportData.ok && exportData.bookings) {
+            exportData.bookings.forEach(b => {
+                // İptal (Cancelled) EDİLMEYEN bütün randevuların gününü kapat!
+                if (b.status !== "Cancelled") {
+                    const dStr = safeYMD(b.bookingDate);
+                    if (dStr) bookedDatesList.push(dStr);
+                }
+            });
+        }
+      } catch(err) { console.warn(err); }
+
+      // 3. Fallback: Eğer eski sistemdeki randevular varsa onları da ekle
+      try {
+        const oldRes = await fetch(APP_SCRIPT_URL + "?action=getUnavailableDates");
+        const data = await oldRes.json();
         if (data.ok) {
-          // Birebir eski kod mantığı ile ekleme yapıyoruz
-          if(data.closedRanges) {
-             data.closedRanges.forEach(range => { 
-                disableRules.push({ from: range.from, to: range.to }); 
-             });
+          if (data.closedRanges) {
+            data.closedRanges.forEach(r => {
+               const s = safeYMD(r.from || r.startDate);
+               const e = safeYMD(r.to || r.endDate || r.from || r.startDate);
+               if (s && e) closedRangesList.push({ start: s, end: e });
+            });
           }
-          if(data.bookedDates) {
-             data.bookedDates.forEach(date => {
-                // String formatını koruyoruz ki timezone kayması olmasın (örn: "2026-10-25")
-                const dStr = String(date).substring(0, 10);
-                bookedDatesList.push(dStr);
-                disableRules.push(dStr); // Sistemin bu günü yerleşik olarak (native) kilitlemesini sağlar
-             });
+          if (data.bookedDates) {
+            data.bookedDates.forEach(date => {
+              const dStr = safeYMD(date);
+              if(dStr && !bookedDatesList.includes(dStr)) bookedDatesList.push(dStr);
+            });
           }
         }
-      } catch (error) { console.error("Virhe ladattaessa kalenteria:", error); }
+      } catch (error) {}
 
       let minBookingDate = new Date();
       minBookingDate.setDate(minBookingDate.getDate() + 1);
@@ -853,17 +1017,46 @@
         altInput: true,
         altFormat: "d.m.Y",
         minDate: minBookingDate, 
-        disable: disableRules,
+        
+        disable: [
+          function(date) {
+            // Pazar günlerini kapat
+            if (date.getDay() === 0) return true;
+            
+            let y = date.getFullYear();
+            let m = String(date.getMonth() + 1).padStart(2, '0');
+            let d = String(date.getDate()).padStart(2, '0');
+            let dateString = `${y}-${m}-${d}`; 
+
+            // Kapalı Aralıklar ile kıyasla
+            for (let i = 0; i < closedRangesList.length; i++) {
+              if (dateString >= closedRangesList[i].start && dateString <= closedRangesList[i].end) {
+                return true; 
+              }
+            }
+            
+            // Rezervasyonlu günlerle kıyasla
+            if (bookedDatesList.includes(dateString)) {
+                return true; 
+            }
+            
+            return false;
+          }
+        ],
         
         onDayCreate: function(dObj, dStr, fp, dayElem) {
-          let dateStr = fp.formatDate(dayElem.dateObj, "Y-m-d");
+          let y = dayElem.dateObj.getFullYear();
+          let m = String(dayElem.dateObj.getMonth() + 1).padStart(2, '0');
+          let d = String(dayElem.dateObj.getDate()).padStart(2, '0');
+          let dateStr = `${y}-${m}-${d}`; 
+
           if (bookedDatesList.includes(dateStr)) {
              dayElem.classList.add("booked-day");
           }
         },
 
         onOpen: function() {
-          document.getElementById('thoughtBubble').classList.remove("show");
+          document.getElementById('thoughtBubble')?.classList.remove("show");
         },
 
         onChange: function(selectedDates, dateStr, instance) {
@@ -872,7 +1065,9 @@
              const msg = translations[currentLang].limited[0];
              setTimeout(() => {
                 const targetField = instance.altInput ? instance.altInput : document.getElementById('bookingDate');
-                showThoughtBubble(targetField, msg, true); 
+                if (typeof showThoughtBubble === 'function') {
+                    showThoughtBubble(targetField, msg, true); 
+                }
              }, 150);
           }
         },
@@ -884,11 +1079,12 @@
               if (dayElem.classList.contains('booked-day') || dayElem.classList.contains('flatpickr-disabled')) {
                   e.stopPropagation();
                   e.preventDefault();
-                  showThoughtBubble(dayElem, translations[currentLang].unavailable, false); 
+                  if (typeof showThoughtBubble === 'function') {
+                      showThoughtBubble(dayElem, translations[currentLang].unavailable, false); 
+                  }
               }
             }
           }
-          // 'true' ekleyerek Flatpickr'dan bile önce tıklamayı yakalayıp durduruyoruz.
           instance.calendarContainer.addEventListener('mousedown', interceptClick, true);
           instance.calendarContainer.addEventListener('touchstart', interceptClick, true);
           instance.calendarContainer.addEventListener('click', interceptClick, true);
@@ -961,6 +1157,7 @@
               });
             } catch(e) {} 
           }
+
           document.getElementById('formWrapper').style.display = 'none';
           document.getElementById('successMessage').style.display = 'block';
         } else {
