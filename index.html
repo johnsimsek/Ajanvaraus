@@ -185,9 +185,6 @@
     .select-items div.time-option { padding: 10px 12px; cursor: pointer; font-size: 13.5px; color: #0b1220; }
     .select-items div.time-option:hover { background-color: #f3f4f6; }
     
-    .busy-yellow-wrap { background-color: #fffbea; border-bottom: 1px solid #fde047; padding: 10px 12px; cursor: default; }
-    .busy-yellow { color: #ca8a04; font-weight: 800; font-size: 11.5px; line-height: 1.3; }
-
     .info-box { display: none; background: #f3f4f6; border: 1px solid #e5e7eb; padding: 12px; border-radius: 10px; font-size: 12px; color: #374151; margin-bottom: 16px; line-height: 1.4; }
     .info-box strong { font-weight: 900; display: block; margin-bottom: 3px; color: #111827;}
 
@@ -559,16 +556,6 @@
       let availableSlots = [...timeSlots];
       
       if (isShowingBusyNotice) {
-        // Yoğun gün yazısı eklendi
-        const wrap = document.createElement('div');
-        wrap.className = 'busy-yellow-wrap';
-        
-        const div1 = document.createElement('div');
-        div1.className = 'busy-yellow';
-        div1.innerText = translations[currentLang].busyNotice1;
-        
-        wrap.appendChild(div1);
-        optionsContainer.appendChild(wrap);
         
         // Hangi gün seçildiğine bakarak TEK BİR saati listeden çıkarıyoruz (döngüsel 4 saat)
         let selectedDateObj = calendarInstance && calendarInstance.selectedDates[0] ? calendarInstance.selectedDates[0] : new Date();
