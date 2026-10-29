@@ -185,8 +185,8 @@
     .select-items div.time-option { padding: 10px 12px; cursor: pointer; font-size: 13.5px; color: #0b1220; }
     .select-items div.time-option:hover { background-color: #f3f4f6; }
     
-    .busy-yellow { color: #ca8a04 !important; font-weight: 800; font-size: 11.5px; background-color: #fffbea; padding: 6px 12px 0px 12px; cursor: default; line-height: 1.3; }
-    .busy-black { color: #000 !important; font-size: 11px; background-color: #fffbea; cursor: default; padding: 1px 12px 6px 12px; border-bottom: 1px solid #e5e7eb; margin-bottom: 4px; line-height: 1.3; }
+    .busy-yellow-wrap { background-color: #fffbea; border-bottom: 1px solid #fde047; padding: 10px 12px; cursor: default; }
+    .busy-yellow { color: #ca8a04; font-weight: 800; font-size: 11.5px; line-height: 1.3; }
 
     .info-box { display: none; background: #f3f4f6; border: 1px solid #e5e7eb; padding: 12px; border-radius: 10px; font-size: 12px; color: #374151; margin-bottom: 16px; line-height: 1.4; }
     .info-box strong { font-weight: 900; display: block; margin-bottom: 3px; color: #111827;}
@@ -511,7 +511,6 @@
         unavailable: "Valitsemasi päivä ei valitettavasti ole saatavilla. Valitse toinen päivä.",
         limited: ["Muutama aika vapaana"],
         busyNotice1: "Muutama aika vapaana tälle päivälle.",
-        busyNotice2: "Tarvittaessa otamme yhteyttä ja ehdotamme toista aikaa.",
         errorMsg: "Virhe: ", connError: "Yhteysvirhe. Yritä uudelleen.",
         alertName: "Anna koko nimesi.", alertEmail: "Anna sähköpostiosoite.",
         alertPhone: "Anna puhelinnumero.", alertType: "Valitse varaustyyppi.",
@@ -540,7 +539,6 @@
         unavailable: "Unfortunately, the selected date is not available. Please choose another date.",
         limited: ["Few spots available"],
         busyNotice1: "Few spots available for this day.",
-        busyNotice2: "If necessary, we will contact you to suggest another time.",
         errorMsg: "Error: ", connError: "Connection error. Please try again.",
         alertName: "Please enter your full name.", alertEmail: "Please enter your email.",
         alertPhone: "Please enter your phone number.", alertType: "Please select a booking type.",
@@ -558,19 +556,37 @@
       const optionsContainer = document.getElementById('timeSelectOptions');
       optionsContainer.innerHTML = '';
       
+      let availableSlots = [...timeSlots];
+      
       if (isShowingBusyNotice) {
+        // Yoğun gün yazısı eklendi
+        const wrap = document.createElement('div');
+        wrap.className = 'busy-yellow-wrap';
+        
         const div1 = document.createElement('div');
         div1.className = 'busy-yellow';
         div1.innerText = translations[currentLang].busyNotice1;
-        optionsContainer.appendChild(div1);
         
-        const div2 = document.createElement('div');
-        div2.className = 'busy-black';
-        div2.innerText = translations[currentLang].busyNotice2;
-        optionsContainer.appendChild(div2);
+        wrap.appendChild(div1);
+        optionsContainer.appendChild(wrap);
+        
+        // Hangi gün seçildiğine bakarak TEK BİR saati listeden çıkarıyoruz (döngüsel 4 saat)
+        let selectedDateObj = calendarInstance && calendarInstance.selectedDates[0] ? calendarInstance.selectedDates[0] : new Date();
+        let day = selectedDateObj.getDate();
+        let pattern = day % 4;
+        
+        let removedSlot = "";
+        if (pattern === 0) removedSlot = "10:00";
+        else if (pattern === 1) removedSlot = "19:00";
+        else if (pattern === 2) removedSlot = "16:00";
+        else if (pattern === 3) removedSlot = "15:00";
+
+        // Belirlenen tek saati listeden çıkar
+        availableSlots = availableSlots.filter(t => t !== removedSlot);
       }
       
-      timeSlots.forEach(time => {
+      // Kalan saatleri listeye yazdır
+      availableSlots.forEach(time => {
         const div = document.createElement('div');
         div.className = 'time-option';
         div.innerText = time;
@@ -581,6 +597,13 @@
         });
         optionsContainer.appendChild(div);
       });
+      
+      // Eğer mevcut seçili saat artık müsait değilse, listedeki ilk saati otomatik seç
+      let currentTime = document.getElementById('bookingTime').value;
+      if (!availableSlots.includes(currentTime) && availableSlots.length > 0) {
+          document.getElementById('bookingTime').value = availableSlots[0];
+          document.getElementById('timeSelectedDisplay').innerText = availableSlots[0];
+      }
     }
 
     // AÇILIR MENÜNÜN TIKLANMA OLAYLARI
@@ -644,7 +667,7 @@
       document.getElementById('btn-fi').classList.toggle('active', lang === 'fi');
       document.getElementById('btn-en').classList.toggle('active', lang === 'en');
       
-      renderTimeOptions(); // Dili değiştirince saat menüsünü de güncelle
+      renderTimeOptions(); 
       initCalendar();
     }
 
@@ -905,7 +928,7 @@
       
       let bookedDatesList = []; 
       let closedRangesList = [];
-      renderTimeOptions(); // İlk yüklemede saatleri oluştur
+      renderTimeOptions(); 
 
       function safeYMD(val) {
         if (!val) return null;
@@ -982,7 +1005,7 @@
         altFormat: "d.m.Y",
         minDate: minBookingDate, 
         maxDate: maxBookingDate,
-        disableMobile: true, // BU KOD İPHONE'DAKİ ÇİFT TIKLAMA SORUNUNU ÇÖZER
+        disableMobile: true, 
         
         disable: [
           function(date) {
