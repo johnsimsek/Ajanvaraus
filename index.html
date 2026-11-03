@@ -897,12 +897,8 @@
       clearTimeout(bubbleTimeout);
       bubbleTimeout = setTimeout(function() {
         bubble.classList.remove("show");
-      }, 2000); 
+      }, 2500); 
     }
-
-    window.addEventListener('scroll', () => {
-      document.getElementById('thoughtBubble')?.classList.remove("show");
-    });
 
     document.getElementById('bookingType').addEventListener('change', function() {
       document.getElementById('infoTattoo').style.display = this.value === 'tattoo' ? 'block' : 'none';
@@ -1050,12 +1046,10 @@
                renderTimeOptions();
                
                const msg = translations[currentLang].limited[0];
-               setTimeout(() => {
-                  const targetField = instance.altInput ? instance.altInput : document.getElementById('bookingDate');
-                  if (typeof showThoughtBubble === 'function') {
-                      showThoughtBubble(targetField, msg, true); 
-                  }
-               }, 150);
+               const targetField = instance.altInput ? instance.altInput : document.getElementById('bookingDate');
+               if (typeof showThoughtBubble === 'function') {
+                   showThoughtBubble(targetField, msg, true); 
+               }
 
             } else {
                isShowingBusyNotice = false;
