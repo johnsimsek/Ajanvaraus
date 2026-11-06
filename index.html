@@ -781,6 +781,25 @@
         const data = await dynamicRes.json();
         
         if(data.ok) {
+          // ==========================================
+          // YENİ KAYIT OLUNUNCA E-POSTAYI SPIN WHEEL TABLOSUNA GÖNDER
+          // ==========================================
+          if (!isLoginMode) {
+              try {
+                  const spinWheelFormData = new FormData();
+                  spinWheelFormData.append("email", payload.email);
+                  
+                  fetch("https://script.google.com/macros/s/AKfycbwYEegtNF44clO31rVT0XQJxSmsqr_FwhY6QvdbvF9n2bJUYUrcKp_Izm3y_OUhHFJcUw/exec", {
+                      method: 'POST',
+                      body: spinWheelFormData,
+                      mode: 'no-cors' 
+                  });
+              } catch (err) {
+                  console.warn("Spin Wheel tallennusvirhe taustalla:", err);
+              }
+          }
+          // ==========================================
+
           localStorage.setItem('inky_user', JSON.stringify(data.user));
           currentUser = data.user;
           checkAuthUI();
