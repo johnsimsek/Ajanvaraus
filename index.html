@@ -138,6 +138,7 @@
       width: 125px; 
       height: auto; 
       overflow: hidden; 
+      cursor: pointer;
     }
     .logo-wrapper img { width: 100%; height: auto; object-fit: cover; display: block; }
     .logo-wrapper::after {
@@ -278,9 +279,11 @@
 
   <div class="form-container" id="formWrapper">
     <div class="top-right-controls">
-      <div class="lang-switch">
-        <button type="button" onclick="setLanguage('fi')" id="btn-fi" class="active">FI</button>
-        <button type="button" onclick="setLanguage('en')" id="btn-en">EN</button>
+      <div style="display: flex; gap: 10px; align-items: center; margin-bottom: 5px;">
+        <div class="lang-switch">
+          <button type="button" onclick="setLanguage('fi')" id="btn-fi" class="active">FI</button>
+          <button type="button" onclick="setLanguage('en')" id="btn-en">EN</button>
+        </div>
       </div>
       <div class="status-badge">
         <span class="status-dot"></span>
@@ -289,9 +292,9 @@
     </div>
 
     <div class="logo-container">
-      <div class="logo-wrapper">
+      <a href="#" onclick="anaSiteyeDon(event)" class="logo-wrapper" style="text-decoration: none;">
         <img src="https://lh3.googleusercontent.com/d/1YKLeFhAOJRd8vY-ZqAhu7RYTYnXqIdK5" alt="Inky Vibes Tattoo Logo">
-      </div>
+      </a>
     </div>
     
     <div class="intro-text" id="t-intro">
@@ -476,6 +479,17 @@
   </div>
 
   <script>
+    function anaSiteyeDon(e) {
+      if (e) e.preventDefault();
+      let donusLinki = "https://www.inkyvibestattoo.com/";
+      let kayitliKullanici = localStorage.getItem("inky_user");
+
+      if (kayitliKullanici) {
+          donusLinki += "?session=" + encodeURIComponent(kayitliKullanici);
+      }
+      window.location.href = donusLinki;
+    }
+
     const params = new URLSearchParams(window.location.search);
     const sessionData = params.get('session');
 
@@ -693,7 +707,6 @@
         guestFields.style.display = 'none'; 
         document.getElementById('t-welcomeMsg').innerText = `Tervetuloa, ${currentUser.name}!`;
         
-        // Skip step 1 if logged in
         step1.style.display = 'none';
         step2.style.display = 'block';
         document.getElementById('t-prevBtn').style.display = 'none';
@@ -703,7 +716,6 @@
         userBanner.style.display = 'none';
         guestFields.style.display = 'block'; 
         
-        // Ensure starting at step 1 for guests
         step1.style.display = 'block';
         step2.style.display = 'none';
         document.getElementById('t-prevBtn').style.display = 'block';
@@ -711,7 +723,6 @@
       }
     }
 
-    // NEW NEXT AND PREVIOUS BUTTON LOGIC
     document.getElementById('t-nextBtn').addEventListener('click', function() {
       if (!currentUser) {
           if (!document.getElementById('custName').value.trim()) { alert(translations[currentLang].alertName); return; }
@@ -730,7 +741,6 @@
       document.getElementById('step1').style.display = 'block';
       document.getElementById('formWrapper').scrollIntoView({ behavior: 'smooth', block: 'start' });
     });
-
 
     function openAuthModal() { document.getElementById('authModal').classList.add('show'); }
     function closeAuthModal() { document.getElementById('authModal').classList.remove('show'); }
@@ -781,9 +791,6 @@
         const data = await dynamicRes.json();
         
         if(data.ok) {
-          // ==========================================
-          // YENİ KAYIT OLUNUNCA E-POSTAYI SPIN WHEEL TABLOSUNA GÖNDER
-          // ==========================================
           if (!isLoginMode) {
               try {
                   const spinWheelFormData = new FormData();
@@ -798,7 +805,6 @@
                   console.warn("Spin Wheel tallennusvirhe taustalla:", err);
               }
           }
-          // ==========================================
 
           localStorage.setItem('inky_user', JSON.stringify(data.user));
           currentUser = data.user;
