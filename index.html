@@ -175,7 +175,6 @@
     }
     input:focus, select:focus, textarea:focus { border-color: #0b1220; }
     
-    /* ÖZEL AÇILIR MENÜ (CUSTOM DROPDOWN) CSS */
     .custom-select-wrapper { position: relative; width: 100%; user-select: none; }
     .select-selected { background-color: #fff; padding: 10px 12px; border: 1px solid rgba(16,24,40,.12); border-radius: 10px; font-size: 13.5px; cursor: pointer; position: relative; transition: border-color 0.2s; }
     .select-selected:hover { border-color: #0b1220; }
@@ -215,12 +214,19 @@
     .checkbox-container input[type="checkbox"]:focus-visible + .custom-checkbox { box-shadow: 0 0 0 3px rgba(11, 18, 32, 0.15); }
     .checkbox-container .text-label { font-size: 11.5px; cursor: pointer; line-height: 1.4; font-weight: 600; color: #0b1220; margin-top: 3px; }
     
-    .btn { position: relative; overflow: hidden; background: linear-gradient(135deg, #2b2b2b 0%, #000000 100%); color: #fff; border: none; padding: 14px; border-radius: 10px; font-size: 14.5px; font-weight: 800; cursor: pointer; width: 100%; margin-top: 8px; transition: transform 0.1s, box-shadow 0.2s; box-shadow: 0 4px 10px rgba(0,0,0,0.2); }
+    .btn { position: relative; overflow: hidden; background: linear-gradient(135deg, #2b2b2b 0%, #000000 100%); color: #fff; border: none; padding: 14px; border-radius: 10px; font-size: 14.5px; font-weight: 800; cursor: pointer; width: 100%; transition: transform 0.1s, box-shadow 0.2s; box-shadow: 0 4px 10px rgba(0,0,0,0.2); }
     .btn::after { content: ""; position: absolute; top: 0; left: -100%; width: 50%; height: 100%; background: linear-gradient(to right, rgba(255,255,255,0) 0%, rgba(255,255,255,0.25) 50%, rgba(255,255,255,0) 100%); transform: skewX(-25deg); animation: shine 3s infinite; }
     @keyframes shine { 0% { left: -100%; } 20% { left: 200%; } 100% { left: 200%; } }
     .btn:hover { background: linear-gradient(135deg, #404040 0%, #1a1a1a 100%); transform: translateY(-1px); box-shadow: 0 6px 14px rgba(0,0,0,0.3); }
     .btn:disabled { opacity: 0.7; cursor: not-allowed; transform: none; }
     
+    /* New styles for steps and outlines */
+    .step-controls { display: flex; align-items: center; gap: 12px; margin-top: 24px; }
+    .step-indicator { font-size: 13px; font-weight: 800; color: #5a677a; white-space: nowrap; margin-left: auto; }
+    .btn.outline { background: #fff; color: #0b1220; border: 1px solid rgba(16,24,40,.2); box-shadow: none; }
+    .btn.outline::after { display: none; }
+    .btn.outline:hover { background: #f9fafb; transform: none; box-shadow: none; border-color: #0b1220; }
+
     #successMessage { display: none; text-align: center; padding: 30px 20px; }
     #successMessage p { color: #0b1220; line-height: 1.6; font-weight: 500; font-size: 14.5px; }
     .checkmark { width: 50px; height: 50px; border-radius: 50%; display: block; stroke-width: 3.5; stroke: #16a34a; stroke-miterlimit: 10; margin: 0 auto 16px; box-shadow: inset 0px 0px 0px #16a34a; }
@@ -256,14 +262,8 @@
     .booking-card .status { display: inline-block; padding: 4px 8px; border-radius: 6px; font-size: 10px; font-weight: bold; margin-top: 8px; }
     .status-Approved { background: #d1fae5; color: #059669; }
 
-    /* Disable changing the year manually in Flatpickr */
-    .flatpickr-current-month .numInputWrapper {
-      pointer-events: none;
-    }
-    .flatpickr-current-month .arrowUp,
-    .flatpickr-current-month .arrowDown {
-      display: none !important;
-    }
+    .flatpickr-current-month .numInputWrapper { pointer-events: none; }
+    .flatpickr-current-month .arrowUp, .flatpickr-current-month .arrowDown { display: none !important; }
   </style>
 </head>
 <body>
@@ -314,97 +314,108 @@
 
     <form id="publicBookingForm" novalidate>
       
-      <div id="guestFields">
-        <div class="field">
-          <label class="req" id="t-nameLabel">Koko Nimi</label>
-          <input type="text" id="custName" placeholder="Koko nimi (esim. Matti Meikäläinen)">
-        </div>
-        <div class="field">
-          <label class="req" id="t-emailLabel">Sähköpostiosoite</label>
-          <input type="email" id="custEmail" placeholder="esimerkki@sahkoposti.fi">
-        </div>
-        <div class="field">
-          <label class="req" id="t-phoneLabel">Puhelin Numero</label>
-          <input type="tel" id="custPhone" value="+358" pattern="^\+358[ \-0-9]{4,15}$">
-        </div>
-      </div>
-      
-      <div class="field">
-        <label class="req" id="t-typeLabel">Varaustyyppi</label>
-        <select id="bookingType">
-          <option value="" disabled selected id="t-typePlace">Valitse varaustyyppi...</option>
-          <option value="tattoo" id="opt-tattoo">Tatuointi Aika</option>
-          <option value="design" id="opt-design">Tatuointi Suunnittelu Aika</option>
-        </select>
-      </div>
-
-      <div id="infoTattoo" class="info-box">
-        <strong id="t-infoTattooTitle">Tatuointiaika (valmis idea)</strong>
-        <span id="t-infoTattooDesc">Sinulla on valmis idea tai referenssikuva. Laajaa suunnittelua ei tarvita; tarvittavat pienet muutokset tehdään ajanvarauksen yhteydessä ennen tatuointia.</span>
-      </div>
-      <div id="infoDesign" class="info-box">
-        <strong id="t-infoDesignTitle">Suunnitteluaika (suunnittelua vaativat tatuoinnit)</strong>
-        <span id="t-infoDesignDesc">Sopii kaikille tatuoinneille, jotka vaativat suunnittelua ennen tatuointia (koosta riippumatta). Suunnittelemme tatuoinnin yhdessä ennen varsinaista tatuointiaikaa.</span>
-      </div>
-
-      <div class="field">
-        <label class="req" id="t-dateLabel">Toivottu Varaus Päivä</label>
-        <input type="text" id="bookingDate" placeholder="Valitse päivä" readonly style="background-color: #fff; cursor: pointer;">
-      </div>
-      
-      <!-- ÖZEL SAAT MENÜSÜ BURADA BAŞLIYOR -->
-      <div class="field">
-        <label class="req" id="t-timeLabel">Toivottu Aika</label>
-        <input type="hidden" id="bookingTime" value="10:00">
-        
-        <div class="custom-select-wrapper" id="timeCustomSelectWrapper">
-          <div class="select-selected" id="timeSelectedDisplay">10:00</div>
-          <div class="select-items select-hide" id="timeSelectOptions">
-            <!-- JavaScript ile doldurulacak -->
+      <!-- STEP 1 -->
+      <div id="step1">
+        <div id="guestFields">
+          <div class="field">
+            <label class="req" id="t-nameLabel">Koko Nimi</label>
+            <input type="text" id="custName" placeholder="Koko nimi (esim. Matti Meikäläinen)">
+          </div>
+          <div class="field">
+            <label class="req" id="t-emailLabel">Sähköpostiosoite</label>
+            <input type="email" id="custEmail" placeholder="esimerkki@sahkoposti.fi">
+          </div>
+          <div class="field">
+            <label class="req" id="t-phoneLabel">Puhelin Numero</label>
+            <input type="tel" id="custPhone" value="+358" pattern="^\+358[ \-0-9]{4,15}$">
           </div>
         </div>
-      </div>
-
-      <div class="field">
-        <label id="t-notesLabel">Muistiinpanoja</label>
-        <textarea id="bookingNotes" rows="3" placeholder="Jos haluat, voit lisäta ideoita tai tarkempia tietoja varauksestasi."></textarea>
-      </div>
-
-      <div class="field">
-        <label id="t-fileLabel">Valitse tiedosto</label>
-        <div class="help" id="t-fileHelp">Jos sinulla on, lisääthän mahdolliset referenssi- tai inspiraatiokuvat. (Maks. 5MB)</div>
-        <input type="file" id="bookingFiles" accept="image/*" multiple>
-      </div>
-
-      <div class="field" style="margin-top: 10px; margin-bottom: 24px; border-top: 1px solid #e5e7eb; padding-top: 16px; position: relative;">
         
-        <div class="checkbox-container">
-          <input type="checkbox" id="termsCheck">
-          
-          <label for="termsCheck" class="custom-checkbox">
-            <svg viewBox="0 0 12 10">
-              <path d="M1.5 5.5l3 3L10.5 1.5" fill="none" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
-            </svg>
-          </label>
-          
-          <label for="termsCheck" class="text-label req">
-            <span id="t-termsCheckLabel">Olen lukenut ja hyväksyn</span>
-            <span class="terms-link" id="btn-termsLink" style="margin-left: 4px;"><span id="t-termsLink">varaus- ja peruutusehdot.</span></span>
-          </label>
-        </div>
-
-        <div id="termsPad" class="terms-pad">
-          <strong id="t-termsTitle">Hyväksyn seuraavat ehdot:</strong>
-          <ul id="t-termsList">
-            <li>Olen vähintään 18-vuotias.</li>
-            <li>Ajan voi perua tai siirtää maksutta viimeistään 48 tuntia ennen varattua aikaa. Alle 48 tuntia ennen tehtävistä peruutuksista tai saapumatta jättämisestä (no-show) varausmaksua ei palauteta. Toistuvien myöhäisten peruutusten tai no-show-tilanteiden vuoksi studio voi jatkossa vaatia ennakkomaksun tai olla hyväksymättä uusia ajanvarauksia.</li>
-            <li>Minulla ei ole allergioita, sairauksia tai lääkitystä, jotka saattavat vaikuttaa tatuoinnin lopputulokseen.</li>
-            <li>En käytä alkoholia 24 tuntiin ennen ajanvaraustani.</li>
-          </ul>
+        <div class="step-controls">
+          <button type="button" class="btn" id="t-nextBtn" style="flex: 1;">Seuraava</button>
+          <span class="step-indicator" id="step1Indicator">1 / 2</span>
         </div>
       </div>
+      
+      <!-- STEP 2 -->
+      <div id="step2" style="display: none;">
+        <div class="field">
+          <label class="req" id="t-typeLabel">Varaustyyppi</label>
+          <select id="bookingType">
+            <option value="" disabled selected id="t-typePlace">Valitse varaustyyppi...</option>
+            <option value="tattoo" id="opt-tattoo">Tatuointi Aika</option>
+            <option value="design" id="opt-design">Tatuointi Suunnittelu Aika</option>
+          </select>
+        </div>
 
-      <button type="submit" class="btn" id="submitBtn">Lähetä</button>
+        <div id="infoTattoo" class="info-box">
+          <strong id="t-infoTattooTitle">Tatuointiaika (valmis idea)</strong>
+          <span id="t-infoTattooDesc">Sinulla on valmis idea tai referenssikuva. Laajaa suunnittelua ei tarvita; tarvittavat pienet muutokset tehdään ajanvarauksen yhteydessä ennen tatuointia.</span>
+        </div>
+        <div id="infoDesign" class="info-box">
+          <strong id="t-infoDesignTitle">Suunnitteluaika (suunnittelua vaativat tatuoinnit)</strong>
+          <span id="t-infoDesignDesc">Sopii kaikille tatuoinneille, jotka vaativat suunnittelua ennen tatuointia (koosta riippumatta). Suunnittelemme tatuoinnin yhdessä ennen varsinaista tatuointiaikaa.</span>
+        </div>
+
+        <div class="field">
+          <label class="req" id="t-dateLabel">Toivottu Varaus Päivä</label>
+          <input type="text" id="bookingDate" placeholder="Valitse päivä" readonly style="background-color: #fff; cursor: pointer;">
+        </div>
+        
+        <div class="field">
+          <label class="req" id="t-timeLabel">Toivottu Aika</label>
+          <input type="hidden" id="bookingTime" value="10:00">
+          
+          <div class="custom-select-wrapper" id="timeCustomSelectWrapper">
+            <div class="select-selected" id="timeSelectedDisplay">10:00</div>
+            <div class="select-items select-hide" id="timeSelectOptions">
+              <!-- JavaScript ile doldurulacak -->
+            </div>
+          </div>
+        </div>
+
+        <div class="field">
+          <label id="t-notesLabel">Muistiinpanoja</label>
+          <textarea id="bookingNotes" rows="3" placeholder="Jos haluat, voit lisäta ideoita tai tarkempia tietoja varauksestasi."></textarea>
+        </div>
+
+        <div class="field">
+          <label id="t-fileLabel">Valitse tiedosto</label>
+          <div class="help" id="t-fileHelp">Jos sinulla on, lisääthän mahdolliset referenssi- tai inspiraatiokuvat. (Maks. 5MB)</div>
+          <input type="file" id="bookingFiles" accept="image/*" multiple>
+        </div>
+
+        <div class="field" style="margin-top: 10px; margin-bottom: 24px; border-top: 1px solid #e5e7eb; padding-top: 16px; position: relative;">
+          <div class="checkbox-container">
+            <input type="checkbox" id="termsCheck">
+            <label for="termsCheck" class="custom-checkbox">
+              <svg viewBox="0 0 12 10">
+                <path d="M1.5 5.5l3 3L10.5 1.5" fill="none" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+              </svg>
+            </label>
+            <label for="termsCheck" class="text-label req">
+              <span id="t-termsCheckLabel">Olen lukenut ja hyväksyn</span>
+              <span class="terms-link" id="btn-termsLink" style="margin-left: 4px;"><span id="t-termsLink">varaus- ja peruutusehdot.</span></span>
+            </label>
+          </div>
+
+          <div id="termsPad" class="terms-pad">
+            <strong id="t-termsTitle">Hyväksyn seuraavat ehdot:</strong>
+            <ul id="t-termsList">
+              <li>Olen vähintään 18-vuotias.</li>
+              <li>Ajan voi perua tai siirtää maksutta viimeistään 48 tuntia ennen varattua aikaa. Alle 48 tuntia ennen tehtävistä peruutuksista tai saapumatta jättämisestä (no-show) varausmaksua ei palauteta. Toistuvien myöhäisten peruutusten tai no-show-tilanteiden vuoksi studio voi jatkossa vaatia ennakkomaksun tai olla hyväksymättä uusia ajanvarauksia.</li>
+              <li>Minulla ei ole allergioita, sairauksia tai lääkitystä, jotka saattavat vaikuttaa tatuoinnin lopputulokseen.</li>
+              <li>En käytä alkoholia 24 tuntiin ennen ajanvaraustani.</li>
+            </ul>
+          </div>
+        </div>
+
+        <div class="step-controls">
+          <button type="button" class="btn outline" id="t-prevBtn" style="width: auto; padding-left: 20px; padding-right: 20px;">Takaisin</button>
+          <button type="submit" class="btn" id="submitBtn" style="flex: 1;">Lähetä</button>
+          <span class="step-indicator" id="step2Indicator">2 / 2</span>
+        </div>
+      </div>
     </form>
   </div>
 
@@ -503,6 +514,7 @@
         termsTitle: "Hyväksyn seuraavat ehdot:",
         termsList: "<li>Olen vähintään 18-vuotias.</li><li>Ajan voi perua tai siirtää maksutta viimeistään 48 tuntia ennen varattua aikaa. Alle 48 tuntia ennen tehtävistä peruutuksista tai saapumatta jättämisestä (no-show) varausmaksua ei palauteta. Toistuvien myöhäisten peruutusten tai no-show-tilanteiden vuoksi studio voi jatkossa vaatia ennakkomaksun tai olla hyväksymättä uusia ajanvarauksia.</li><li>Minulla ei ole allergioita, sairauksia tai lääkitystä, jotka saattavat vaikuttaa tatuoinnin lopputulokseen.</li><li>En käytä alkoholia 24 tuntiin ennen ajanvaraustani.</li>",
         termsCheckLabel: "Olen lukenut ja hyväksyn",
+        nextBtn: "Seuraava", prevBtn: "Takaisin",
         submitBtn: "Lähetä", submitLoading: "Lähetetään...",
         successMsg: "Kiitos!<br>Ajanvarauspyyntösi on lähetetty<br>onnistuneesti.",
         unavailable: "Valitsemasi päivä ei valitettavasti ole saatavilla. Valitse toinen päivä.",
@@ -531,6 +543,7 @@
         termsTitle: "I accept the following terms:",
         termsList: "<li>I am at least 18 years old.</li><li>Appointments can be cancelled or rescheduled free of charge up to 48 hours before the booked time. For cancellations made less than 48 hours before or no-shows, the booking fee is non-refundable. Due to repeated late cancellations or no-shows, the studio may require a prepayment in the future or decline new bookings.</li><li>I have no allergies, illnesses, or medications that might affect the tattoo result.</li><li>I will not consume alcohol for 24 hours before my appointment.</li>",
         termsCheckLabel: "I have read and accept the",
+        nextBtn: "Next", prevBtn: "Back",
         submitBtn: "Submit", submitLoading: "Sending...",
         successMsg: "Thank you!<br>Your booking request has been sent<br>successfully.",
         unavailable: "Unfortunately, the selected date is not available. Please choose another date.",
@@ -548,7 +561,6 @@
     let isShowingBusyNotice = false;
     const timeSlots = ["10:00","11:00","12:00","13:00","14:00","15:00","16:00","17:00","18:00","19:00"];
 
-    // ÖZEL SAAT MENÜSÜNÜ ÇİZEN FONKSİYON
     function renderTimeOptions() {
       const optionsContainer = document.getElementById('timeSelectOptions');
       optionsContainer.innerHTML = '';
@@ -556,8 +568,6 @@
       let availableSlots = [...timeSlots];
       
       if (isShowingBusyNotice) {
-        
-        // Hangi gün seçildiğine bakarak TEK BİR saati listeden çıkarıyoruz (döngüsel 4 saat)
         let selectedDateObj = calendarInstance && calendarInstance.selectedDates[0] ? calendarInstance.selectedDates[0] : new Date();
         let day = selectedDateObj.getDate();
         let pattern = day % 4;
@@ -568,11 +578,9 @@
         else if (pattern === 2) removedSlot = "16:00";
         else if (pattern === 3) removedSlot = "15:00";
 
-        // Belirlenen tek saati listeden çıkar
         availableSlots = availableSlots.filter(t => t !== removedSlot);
       }
       
-      // Kalan saatleri listeye yazdır
       availableSlots.forEach(time => {
         const div = document.createElement('div');
         div.className = 'time-option';
@@ -585,7 +593,6 @@
         optionsContainer.appendChild(div);
       });
       
-      // Eğer mevcut seçili saat artık müsait değilse, listedeki ilk saati otomatik seç
       let currentTime = document.getElementById('bookingTime').value;
       if (!availableSlots.includes(currentTime) && availableSlots.length > 0) {
           document.getElementById('bookingTime').value = availableSlots[0];
@@ -593,7 +600,6 @@
       }
     }
 
-    // AÇILIR MENÜNÜN TIKLANMA OLAYLARI
     document.getElementById('timeSelectedDisplay').addEventListener('click', function(e) {
       e.stopPropagation();
       document.getElementById('timeSelectOptions').classList.toggle('select-hide');
@@ -648,6 +654,8 @@
       document.getElementById('t-termsList').innerHTML = t.termsList;
       document.getElementById('t-termsCheckLabel').innerText = t.termsCheckLabel;
 
+      document.getElementById('t-nextBtn').innerText = t.nextBtn;
+      document.getElementById('t-prevBtn').innerText = t.prevBtn;
       document.getElementById('submitBtn').innerText = t.submitBtn;
       document.getElementById('t-successMsg').innerHTML = t.successMsg;
       
@@ -676,18 +684,53 @@
       const guestFields = document.getElementById('guestFields');
       const authBanner = document.getElementById('authBanner');
       const userBanner = document.getElementById('userBanner');
+      const step1 = document.getElementById('step1');
+      const step2 = document.getElementById('step2');
 
       if (currentUser) {
         authBanner.style.display = 'none';
         userBanner.style.display = 'flex';
         guestFields.style.display = 'none'; 
         document.getElementById('t-welcomeMsg').innerText = `Tervetuloa, ${currentUser.name}!`;
+        
+        // Skip step 1 if logged in
+        step1.style.display = 'none';
+        step2.style.display = 'block';
+        document.getElementById('t-prevBtn').style.display = 'none';
+        document.getElementById('step2Indicator').style.display = 'none';
       } else {
         authBanner.style.display = 'flex';
         userBanner.style.display = 'none';
         guestFields.style.display = 'block'; 
+        
+        // Ensure starting at step 1 for guests
+        step1.style.display = 'block';
+        step2.style.display = 'none';
+        document.getElementById('t-prevBtn').style.display = 'block';
+        document.getElementById('step2Indicator').style.display = 'inline-block';
       }
     }
+
+    // NEW NEXT AND PREVIOUS BUTTON LOGIC
+    document.getElementById('t-nextBtn').addEventListener('click', function() {
+      if (!currentUser) {
+          if (!document.getElementById('custName').value.trim()) { alert(translations[currentLang].alertName); return; }
+          if (!document.getElementById('custEmail').value.trim()) { alert(translations[currentLang].alertEmail); return; }
+          const p = document.getElementById('custPhone').value.trim();
+          if (!p || p === "+358") { alert(translations[currentLang].alertPhone); return; }
+      }
+      
+      document.getElementById('step1').style.display = 'none';
+      document.getElementById('step2').style.display = 'block';
+      document.getElementById('formWrapper').scrollIntoView({ behavior: 'smooth', block: 'start' });
+    });
+
+    document.getElementById('t-prevBtn').addEventListener('click', function() {
+      document.getElementById('step2').style.display = 'none';
+      document.getElementById('step1').style.display = 'block';
+      document.getElementById('formWrapper').scrollIntoView({ behavior: 'smooth', block: 'start' });
+    });
+
 
     function openAuthModal() { document.getElementById('authModal').classList.add('show'); }
     function closeAuthModal() { document.getElementById('authModal').classList.remove('show'); }
@@ -1093,12 +1136,6 @@
     document.getElementById('publicBookingForm').addEventListener('submit', async function(e) {
       e.preventDefault();
 
-      if (!currentUser) {
-          if (!document.getElementById('custName').value.trim()) { alert(translations[currentLang].alertName); return; }
-          if (!document.getElementById('custEmail').value.trim()) { alert(translations[currentLang].alertEmail); return; }
-          const p = document.getElementById('custPhone').value.trim();
-          if (!p || p === "+358") { alert(translations[currentLang].alertPhone); return; }
-      }
       if (!document.getElementById('bookingType').value) { alert(translations[currentLang].alertType); return; }
       if (!document.getElementById('bookingDate').value) { alert(translations[currentLang].alertDate); return; }
       if (!document.getElementById('bookingTime').value) { alert(translations[currentLang].alertTime); return; }
