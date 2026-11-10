@@ -150,7 +150,6 @@
     
     .intro-text { font-size: 13px; color: #5a677a; margin-bottom: 30px; text-align: center; line-height: 1.5; }
     
-    /* PÄIVITETTY: Kirjaudu sisään osio (Yazı daha küçük ve opacity düşürüldü) */
     .auth-banner {
       display: flex; flex-direction: column; gap: 4px; background: transparent;
       border: none; padding: 0; padding-right: 120px; 
@@ -277,7 +276,6 @@
     .flatpickr-current-month .numInputWrapper { pointer-events: none; }
     .flatpickr-current-month .arrowUp, .flatpickr-current-month .arrowDown { display: none !important; }
 
-    /* Ana siteyle uyumlu Auth Input stilleri */
     .input-wrapper { position: relative; margin-bottom: 12px; }
     .input-wrapper .auth-input { 
       width: 100%; padding: 12px 18px; border: 1px solid rgba(0, 0, 0, 0.1); 
@@ -323,12 +321,14 @@
       </div>
     </div>
 
-    <!-- TÄSSÄ PÄIVITETTY SISÄÄNKIRJAUTUMISOSIO (Yazı küçültüldü ve opacity düşürüldü) -->
+    <!-- PÄIVITETTY SISÄÄNKIRJAUTUMISOSIO (Yatayda olabildiğince daraltılmış buton) -->
     <div class="auth-banner" id="authBanner">
       <div class="auth-buttons">
-        <button type="button" class="btn-small" onclick="openAuthModal()" id="t-btnLogin">Kirjaudu sisään / Luo tili</button>
+        <button type="button" class="btn-small" onclick="openAuthModal()" id="t-btnLogin" style="display: flex; flex-direction: column; align-items: flex-start; padding: 3px 6px; gap: 0px; height: auto; border-radius: 5px;">
+          <span style="font-size: 8px; font-weight: 700; line-height: 1.1;">Kirjaudu sisään / Luo tili</span>
+          <span id="t-authDesc" style="font-size: 5.5px; font-weight: 400; color: rgba(255,255,255,0.75); letter-spacing: 0px; line-height: 1.1;">Ajan voi varata myös ilman tiliä.</span>
+        </button>
       </div>
-      <p id="t-authDesc">Ajan voi varata myös ilman tiliä.</p>
     </div>
 
     <div class="auth-banner" id="userBanner" style="display: none;">
