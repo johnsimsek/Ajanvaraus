@@ -148,17 +148,29 @@
     }
     @keyframes logoShine { 0% { left: -100%; } 15% { left: 200%; } 100% { left: 200%; } }
     
-    .intro-text { font-size: 13px; color: #5a677a; margin-bottom: 20px; text-align: center; line-height: 1.5; }
+    .intro-text { font-size: 13px; color: #5a677a; margin-bottom: 30px; text-align: center; line-height: 1.5; }
     
+    /* PÄIVITETTY: Kirjaudu sisään osio (Yazı daha küçük ve opacity düşürüldü) */
     .auth-banner {
-      display: flex; flex-direction: column; gap: 10px; background: rgba(37,99,235,.05);
-      border: 1px solid rgba(37,99,235,.2); padding: 14px; border-radius: 12px; margin-bottom: 20px; text-align: center;
+      display: flex; flex-direction: column; gap: 4px; background: transparent;
+      border: none; padding: 0; padding-right: 120px; 
+      margin-top: -12px; 
+      margin-bottom: 15px; text-align: left; align-items: flex-start;
     }
-    .auth-banner p { margin: 0; font-size: 12px; color: #1e3a8a; font-weight: 600; }
-    .auth-buttons { display: flex; gap: 8px; justify-content: center; }
+    .auth-banner p { 
+      margin: 0; 
+      font-size: 7.5px; 
+      color: #6b7280; 
+      font-weight: 500; 
+      line-height: 1.3; 
+      opacity: 0.75; 
+      letter-spacing: 0.2px; 
+    }
+    .auth-buttons { display: flex; gap: 8px; justify-content: flex-start; }
+    
     .btn-small {
-      background: #000; color: #fff; border: none; padding: 8px 14px;
-      border-radius: 8px; font-size: 11px; font-weight: 700; cursor: pointer; transition: background 0.2s;
+      background: #000; color: #fff; border: none; padding: 5px 10px;
+      border-radius: 6px; font-size: 9.5px; font-weight: 700; cursor: pointer; transition: background 0.2s;
     }
     .btn-small:hover { background: #333; }
     .btn-small.outline { background: #fff; color: #000; border: 1px solid #000; }
@@ -221,7 +233,6 @@
     .btn:hover { background: linear-gradient(135deg, #404040 0%, #1a1a1a 100%); transform: translateY(-1px); box-shadow: 0 6px 14px rgba(0,0,0,0.3); }
     .btn:disabled { opacity: 0.7; cursor: not-allowed; transform: none; }
     
-    /* New styles for steps and outlines */
     .step-controls { display: flex; align-items: center; gap: 12px; margin-top: 24px; }
     .step-indicator { font-size: 13px; font-weight: 800; color: #5a677a; white-space: nowrap; margin-left: auto; }
     .btn.outline { background: #fff; color: #0b1220; border: 1px solid rgba(16,24,40,.2); box-shadow: none; }
@@ -265,6 +276,27 @@
 
     .flatpickr-current-month .numInputWrapper { pointer-events: none; }
     .flatpickr-current-month .arrowUp, .flatpickr-current-month .arrowDown { display: none !important; }
+
+    /* Ana siteyle uyumlu Auth Input stilleri */
+    .input-wrapper { position: relative; margin-bottom: 12px; }
+    .input-wrapper .auth-input { 
+      width: 100%; padding: 12px 18px; border: 1px solid rgba(0, 0, 0, 0.1); 
+      border-radius: 50px; font-size: 13.5px; outline: none; transition: border 0.3s; 
+      background: #fff; font-family: inherit;
+    }
+    .input-wrapper .auth-input:focus { border-color: #0b1220; }
+    .req-star { 
+      position: absolute; right: 15px; top: 50%; transform: translateY(-50%); 
+      color: #ef4444; font-size: 18px; font-weight: bold; pointer-events: none; line-height: 1; 
+    }
+    .auth-btn { 
+      width: 100%; padding: 12px 20px; border: none; border-radius: 50px; background: #000; 
+      color: #fff; font-size: 14px; font-weight: 700; cursor: pointer; 
+      transition: background 0.3s, transform 0.2s; font-family: inherit; margin-top: 5px;
+    }
+    .auth-btn:active { transform: scale(0.98); }
+    .auth-toggle { text-align: center; font-size: 12.5px; margin-top: 15px; }
+    .auth-toggle a { color: #000; font-weight: 700; text-decoration: none; cursor: pointer; }
   </style>
 </head>
 <body>
@@ -287,8 +319,23 @@
       </div>
       <div class="status-badge">
         <span class="status-dot"></span>
-        <span id="t-statusText">Ajanvaraus avoinna</span>
+        <span id="t-statusText"> Ajanvaraus avoinna</span>
       </div>
+    </div>
+
+    <!-- TÄSSÄ PÄIVITETTY SISÄÄNKIRJAUTUMISOSIO (Yazı küçültüldü ve opacity düşürüldü) -->
+    <div class="auth-banner" id="authBanner">
+      <div class="auth-buttons">
+        <button type="button" class="btn-small" onclick="openAuthModal()" id="t-btnLogin">Kirjaudu sisään / Luo tili</button>
+      </div>
+      <p id="t-authDesc">Ajan voi varata myös ilman tiliä.</p>
+    </div>
+
+    <div class="auth-banner" id="userBanner" style="display: none;">
+      <div class="auth-buttons">
+        <button type="button" class="btn-small" onclick="openProfileModal()">Profiili</button>
+      </div>
+      <p style="color: #065f46;" id="t-welcomeMsg">Tervetuloa!</p>
     </div>
 
     <div class="logo-container">
@@ -299,20 +346,6 @@
     
     <div class="intro-text" id="t-intro">
       Ajan varaaminen on helppoa ja nopeaa - varaa aikasi verkossa sinulle sopivaan hetkeen.(Vain ajanvarauksella)
-    </div>
-
-    <div class="auth-banner" id="authBanner">
-      <p id="t-authDesc"> Kirjaudu sisään tai luo tili nähdäksesi varauksesi ja tallentaaksesi tietosi. Voit varata ajan myös ilman tiliä. </p>
-      <div class="auth-buttons">
-        <button type="button" class="btn-small" onclick="openAuthModal()" id="t-btnLogin">Kirjaudu sisään / Luo tili</button>
-      </div>
-    </div>
-
-    <div class="auth-banner" id="userBanner" style="display: none; background: #ecfdf5; border-color: #a7f3d0;">
-      <p style="color: #065f46;" id="t-welcomeMsg">Tervetuloa!</p>
-      <div class="auth-buttons">
-        <button type="button" class="btn-small" onclick="openProfileModal()">Profiili</button>
-      </div>
     </div>
 
     <form id="publicBookingForm" novalidate>
@@ -434,24 +467,54 @@
     © Inky Vibes Tattoo
   </div>
 
-  <!-- AUTH MODAL -->
+  <!-- ANA SİTEYE UYUMLU AUTH MODAL -->
   <div class="modal-overlay" id="authModal">
-    <div class="modal-content">
+    <div class="modal-content" style="padding: 30px 20px;">
       <span class="modal-close" onclick="closeAuthModal()">&times;</span>
-      <h3 id="modalAuthTitle" style="text-align:center; margin-top:0;">Kirjaudu sisään</h3>
-      <p style="font-size:12px; color:#666; text-align:center;" id="modalAuthDesc">Tilaa sähköpostit ja varaa aika helposti.</p>
-      <form id="authForm" style="margin-top:20px;">
-        <div class="field signup-field" style="display:none;"><label>Koko Nimi</label><input type="text" id="authName" placeholder="Koko Nimi"></div>
-        <div class="field signup-field" style="display:none;"><label>Puhelinnumero</label><input type="tel" id="authPhone" value="+358"></div>
-        <div class="field"><label>Sähköpostiosoite</label><input type="email" id="authEmail" required></div>
-        <div class="field"><label>Salasana</label><input type="password" id="authPass" required></div>
-        <div style="text-align:right; margin-top:-10px; margin-bottom:15px; font-size:11px;">
-          <a href="#" onclick="resetPassword(event)" style="color:#666; text-decoration:none;">Unohditko salasanasi?</a>
+      <h3 id="modalAuthTitle" style="text-align:center; margin-top:0; margin-bottom: 5px;">Kirjaudu sisään</h3>
+      <p style="font-size:12px; color:#666; text-align:center; margin-bottom: 20px;" id="modalAuthDesc">Tilaa sähköpostit ja varaa aika helposti.</p>
+      
+      <form id="authForm">
+        
+        <div class="input-wrapper signup-wrapper" style="display:none;">
+            <input type="text" id="authName" placeholder="Koko Nimi" class="auth-input">
+            <span class="req-star">*</span>
         </div>
-        <button type="submit" class="btn" id="authSubmitBtn">Kirjaudu</button>
+
+        <div class="input-wrapper signup-wrapper" style="display:none;">
+            <input type="tel" id="authPhone" placeholder="Puhelinnumero" value="+358" class="auth-input">
+            <span class="req-star">*</span>
+        </div>
+        
+        <div class="input-wrapper">
+            <input type="email" id="authEmail" placeholder="Sähköpostiosoite" class="auth-input" required>
+            <span class="req-star">*</span>
+        </div>
+        
+        <div class="input-wrapper">
+            <input type="password" id="authPass" placeholder="Salasana" class="auth-input" style="padding-right: 55px;" required>
+            <span class="req-star" style="right: 40px;">*</span>
+            <span id="toggle-password" style="position: absolute; right: 15px; top: 50%; transform: translateY(-50%); cursor: pointer; color: #666; display: flex; align-items: center; justify-content: center; height: 100%; user-select: none;">
+                <svg id="eye-icon-open" viewBox="0 0 24 24" width="18" height="18" stroke="currentColor" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round">
+                    <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"></path>
+                    <circle cx="12" cy="12" r="3"></circle>
+                </svg>
+                <svg id="eye-icon-closed" viewBox="0 0 24 24" width="18" height="18" stroke="currentColor" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round" style="display: none;">
+                    <path d="M17.94 17.94A10.07 10.07 0 0 1 12 20c-7 0-11-8-11-8a18.45 18.45 0 0 1 5.06-5.94M9.9 4.24A9.12 9.12 0 0 1 12 4c7 0 11 8 11 8a18.5 18.5 0 0 1-2.16 3.19m-6.72-1.07a3 3 0 1 1-4.24-4.24"></path>
+                    <line x1="1" y1="1" x2="23" y2="23"></line>
+                </svg>
+            </span>
+        </div>
+
+        <div style="text-align:right; margin-top:-5px; margin-bottom:20px; font-size:11.5px;">
+            <a href="#" onclick="resetPassword(event)" style="color:#666; text-decoration:none; font-weight:500;">Unohditko salasanasi?</a>
+        </div>
+
+        <button type="submit" class="auth-btn" id="authSubmitBtn">Kirjaudu</button>
       </form>
-      <div style="text-align:center; margin-top:15px; font-size:12px;">
-        <a href="#" id="authToggleLink" style="color:#000; font-weight:bold;">Eikö sinulla ole tiliä? Rekisteröidy</a>
+
+      <div class="auth-toggle">
+          <a href="#" id="authToggleLink">Eikö sinulla ole tiliä? Rekisteröidy</a>
       </div>
     </div>
   </div>
@@ -684,9 +747,6 @@
       if (!this.value.startsWith("+358")) this.value = "+358";
       e.target.setCustomValidity('');
     });
-    document.getElementById('authPhone').addEventListener('input', function(e) {
-      if (!this.value.startsWith("+358")) this.value = "+358";
-    });
 
     document.getElementById('custPhone').addEventListener('invalid', function(e) {
       if (e.target.value.trim() === '+358' || !e.target.validity.valid) {
@@ -764,10 +824,49 @@
         fetchMyBookings();
     }
     
+    document.getElementById("toggle-password").addEventListener("click", function() {
+        const passInput = document.getElementById("authPass");
+        const eyeOpen = document.getElementById("eye-icon-open");
+        const eyeClosed = document.getElementById("eye-icon-closed");
+        
+        if (passInput.type === "password") {
+            passInput.type = "text";
+            eyeOpen.style.display = "none";
+            eyeClosed.style.display = "block";
+        } else {
+            passInput.type = "password";
+            eyeOpen.style.display = "block";
+            eyeClosed.style.display = "none";
+        }
+    });
+
+    const authPhoneInput = document.getElementById("authPhone");
+    authPhoneInput.addEventListener("input", function() {
+        if (!this.value.startsWith("+358")) {
+            this.value = "+358";
+        }
+        if (!isLoginMode) {
+            if (this.value === "+358" || this.value.length < 7) {
+                this.setCustomValidity("Syötä voimassa oleva puhelinnumero."); 
+            } else {
+                this.setCustomValidity(""); 
+            }
+        }
+    });
+
     document.getElementById('authToggleLink').addEventListener('click', (e) => {
       e.preventDefault();
       isLoginMode = !isLoginMode;
-      document.querySelectorAll('.signup-field').forEach(el => el.style.display = isLoginMode ? 'none' : 'flex');
+      
+      const wrappers = document.querySelectorAll('.signup-wrapper');
+      wrappers.forEach(el => {
+          el.style.display = isLoginMode ? 'none' : 'block';
+          const input = el.querySelector('input');
+          if (input) {
+              input.required = !isLoginMode;
+          }
+      });
+      
       document.getElementById('modalAuthTitle').innerText = isLoginMode ? "Kirjaudu sisään" : "Luo tili";
       document.getElementById('authSubmitBtn').innerText = isLoginMode ? "Kirjaudu" : "Rekisteröidy";
       document.getElementById('authToggleLink').innerText = isLoginMode ? "Eikö sinulla ole tiliä? Rekisteröidy tästä" : "Onko sinulla jo tili? Kirjaudu sisään";
@@ -775,6 +874,21 @@
 
     document.getElementById('authForm').addEventListener('submit', async (e) => {
       e.preventDefault();
+
+      if (!isLoginMode) {
+          const nameVal = document.getElementById("authName").value.trim();
+          const phoneVal = document.getElementById("authPhone").value.trim();
+          
+          if (!nameVal) {
+              alert("Syötä nimesi."); 
+              return;
+          }
+          if (phoneVal === "+358" || phoneVal.length < 7) {
+              alert("Syötä voimassa oleva puhelinnumero."); 
+              return;
+          }
+      }
+
       const btn = document.getElementById('authSubmitBtn');
       const originalText = btn.innerText;
       btn.disabled = true; btn.innerText = "Odottaa...";
