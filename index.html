@@ -321,16 +321,6 @@
       </div>
     </div>
 
-    <!-- PÄIVITETTY SISÄÄNKIRJAUTUMISOSIO (Yatayda olabildiğince daraltılmış buton) -->
-    <div class="auth-banner" id="authBanner">
-      <div class="auth-buttons">
-        <button type="button" class="btn-small" onclick="openAuthModal()" id="t-btnLogin" style="display: flex; flex-direction: column; align-items: flex-start; padding: 3px 6px; gap: 0px; height: auto; border-radius: 5px;">
-          <span style="font-size: 8px; font-weight: 700; line-height: 1.1;">Kirjaudu sisään / Luo tili</span>
-          <span id="t-authDesc" style="font-size: 5.5px; font-weight: 400; color: rgba(255,255,255,0.75); letter-spacing: 0px; line-height: 1.1;">Ajan voi varata myös ilman tiliä.</span>
-        </button>
-      </div>
-    </div>
-
     <div class="auth-banner" id="userBanner" style="display: none;">
       <div class="auth-buttons">
         <button type="button" class="btn-small" onclick="openProfileModal()">Profiili</button>
@@ -756,28 +746,25 @@
 
     function checkAuthUI() {
       const guestFields = document.getElementById('guestFields');
-      const authBanner = document.getElementById('authBanner');
       const userBanner = document.getElementById('userBanner');
       const step1 = document.getElementById('step1');
       const step2 = document.getElementById('step2');
 
       if (currentUser) {
-        authBanner.style.display = 'none';
-        userBanner.style.display = 'flex';
-        guestFields.style.display = 'none'; 
+        if (userBanner) userBanner.style.display = 'flex';
+        if (guestFields) guestFields.style.display = 'none'; 
         document.getElementById('t-welcomeMsg').innerText = `Tervetuloa, ${currentUser.name}!`;
         
-        step1.style.display = 'none';
-        step2.style.display = 'block';
+        if (step1) step1.style.display = 'none';
+        if (step2) step2.style.display = 'block';
         document.getElementById('t-prevBtn').style.display = 'none';
         document.getElementById('step2Indicator').style.display = 'none';
       } else {
-        authBanner.style.display = 'flex';
-        userBanner.style.display = 'none';
-        guestFields.style.display = 'block'; 
+        if (userBanner) userBanner.style.display = 'none';
+        if (guestFields) guestFields.style.display = 'block'; 
         
-        step1.style.display = 'block';
-        step2.style.display = 'none';
+        if (step1) step1.style.display = 'block';
+        if (step2) step2.style.display = 'none';
         document.getElementById('t-prevBtn').style.display = 'block';
         document.getElementById('step2Indicator').style.display = 'inline-block';
       }
