@@ -261,7 +261,7 @@
     .flatpickr-day.flatpickr-disabled, .flatpickr-day.flatpickr-disabled:hover { opacity: 0.25 !important; cursor: not-allowed; }
     .flatpickr-day.today.flatpickr-disabled { opacity: 0.65 !important; }
 
-    /* LISÄTTY: Override for booked days to look like available days */
+    /* Override for booked days to look like available days */
     .flatpickr-day.flatpickr-disabled.booked-day {
       opacity: 1 !important;
       color: #393939 !important;
@@ -1199,7 +1199,11 @@
           let d = String(dayElem.dateObj.getDate()).padStart(2, '0');
           let dateStr = `${y}-${m}-${d}`; 
 
-          if (bookedDatesList.includes(dateStr)) {
+          let now = new Date();
+          now.setHours(0,0,0,0);
+
+          // LISÄTTY: Vain tulevat päivät saavat "booked-day" luokan, menneet päivät pysyvät haaleina
+          if (bookedDatesList.includes(dateStr) && dayElem.dateObj >= now) {
              dayElem.classList.add("booked-day");
           }
         },
