@@ -599,7 +599,7 @@
         limited: ["Muutama aika vapaana"],
         busyNotice1: "Muutama aika vapaana.",
         errorMsg: "Virhe: ", connError: "Yhteysvirhe. Yritä uudelleen.",
-        alertName: "Anna koko nimesi.", alertEmail: "Anna sähköpostiosoite.",
+        alertName: "Anna koko nimesi.", alertEmail: "Anna kelvollinen sähköpostiosoite.",
         alertPhone: "Anna puhelinnumero.", alertType: "Valitse varaustyyppi.",
         alertDate: "Valitse päivämäärä.", alertTime: "Valitse aika.", alertTerms: "Hyväksy ehdot jatkaaksesi."
       },
@@ -628,7 +628,7 @@
         limited: ["Few spots available"],
         busyNotice1: "Few spots available for this day.",
         errorMsg: "Error: ", connError: "Connection error. Please try again.",
-        alertName: "Please enter your full name.", alertEmail: "Please enter your email.",
+        alertName: "Please enter your full name.", alertEmail: "Please enter a valid email address.",
         alertPhone: "Please enter your phone number.", alertType: "Please select a booking type.",
         alertDate: "Please select a date.", alertTime: "Please select a time.", alertTerms: "Please accept the terms to continue."
       }
@@ -781,12 +781,33 @@
       }
     }
 
+    // YENİ E-POSTA VE TELEFON KONTROLÜ
     document.getElementById('t-nextBtn').addEventListener('click', function() {
       if (!currentUser) {
-          if (!document.getElementById('custName').value.trim()) { alert(translations[currentLang].alertName); return; }
-          if (!document.getElementById('custEmail').value.trim()) { alert(translations[currentLang].alertEmail); return; }
-          const p = document.getElementById('custPhone').value.trim();
-          if (!p || p === "+358") { alert(translations[currentLang].alertPhone); return; }
+          const nameInput = document.getElementById('custName');
+          const emailInput = document.getElementById('custEmail');
+          const phoneInput = document.getElementById('custPhone');
+          
+          // 1. İsim Kontrolü
+          if (!nameInput.value.trim()) { 
+              alert(translations[currentLang].alertName); 
+              return; 
+          }
+          
+          // 2. E-posta Kontrolü (Daha esnek, sadece @ ve . içerip içermediğine bakar)
+          const emailVal = emailInput.value.trim();
+          if (!emailVal || !emailVal.includes('@') || !emailVal.includes('.')) { 
+              alert(translations[currentLang].alertEmail); 
+              return; 
+          }
+          
+          // 3. Telefon Numarası Kontrolü (Boşlukları saymadan uzunluğa bakar)
+          const phoneVal = phoneInput.value.trim();
+          const phoneClean = phoneVal.replace(/[\s-]/g, ''); // Boşluk ve tireleri yoksay
+          if (!phoneVal || phoneVal === "+358" || phoneClean.length < 9) { 
+              alert(translations[currentLang].phoneError); 
+              return; 
+          }
       }
       
       document.getElementById('step1').style.display = 'none';
@@ -1202,7 +1223,6 @@
           let now = new Date();
           now.setHours(0,0,0,0);
 
-          // LISÄTTY: Vain tulevat päivät saavat "booked-day" luokan, menneet päivät pysyvät haaleina
           if (bookedDatesList.includes(dateStr) && dayElem.dateObj >= now) {
              dayElem.classList.add("booked-day");
           }
@@ -1281,6 +1301,16 @@
       if (!document.getElementById('bookingDate').value) { alert(translations[currentLang].alertDate); return; }
       if (!document.getElementById('bookingTime').value) { alert(translations[currentLang].alertTime); return; }
       if (!document.getElementById('termsCheck').checked) { alert(translations[currentLang].alertTerms); return; }
+
+      const notesValue = document.getElementById('bookingNotes').value.trim();
+      const filesCount = document.getElementById('bookingFiles').files.length;
+      if (notesValue === "" && filesCount === 0) {
+        const alertMsg = currentLang === 'fi' 
+          ? "Lisää kuva tai kerro lyhyesti tatuointi-ideastasi." 
+          : "Please add a picture or briefly describe your tattoo idea.";
+        alert(alertMsg);
+        return;
+      }
 
       const btn = document.getElementById('submitBtn');
       btn.innerText = translations[currentLang].submitLoading;
